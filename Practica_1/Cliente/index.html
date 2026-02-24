@@ -13,6 +13,7 @@
 <script>
 numeroForm.onsubmit = async e => {
     e.preventDefault();
+    //Saca la informacion del formulario
     const form = document.querySelector('#numeroForm');
     const data = {
         numero: form.querySelector('input[name="numero"]').value
@@ -22,6 +23,7 @@ numeroForm.onsubmit = async e => {
         data.numero = 0;
     }
 
+    //Lanza la peticion Post
     const response = await fetch('http://localhost:3000/factorial2', {
         method: 'POST',
         headers: {
@@ -29,7 +31,9 @@ numeroForm.onsubmit = async e => {
         },
         body: JSON.stringify(data)
     });
-    const text = await response.text();
-    document.querySelector('#respuesta').innerHTML = text;
+
+    //Procesa la Respuesta del servidor
+    const text = JSON.parse(await response.text());
+    document.querySelector('#respuesta').innerHTML = text.status === 1 ? `El factorial de  ${text.input} es ${text.result}` : `${text.input} ${text.result} ! `;
 }
 </script>
