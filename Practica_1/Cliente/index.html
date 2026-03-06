@@ -1,3 +1,5 @@
+
+<h1 id="saludo"></h1>
 <form id="numeroForm">
     <div>
         <label for="numero">Introduce el número para el factorial</label>
@@ -10,19 +12,63 @@
         <div id="respuesta"></div>
     </div>
 </form>
+
+<div id = "modalUsuario" style="
+position:fixed;
+top:0;
+left: 0;
+width: 100%;
+height: 100%;
+background:rgba(0, 0, 0, 0.5) ;
+display: none;
+align-items: center;
+justify-content:center;
+">
+    <div style="background: white;padding: 20px;border-radius:6px;">
+        <h3>Introduce su usuario</h3>
+        <input type="text" id="nombreUsuario" placeholder="Tu usuario"/>
+        <button id="guardarUsuario">Guardar</button>
+    </div>
+</div>
+
 <script>
+
+const modal = document.querySelector('#modalUsuario');
+const nombreInput = document.querySelector('#nombreUsuario');
+const guardarBtn = document.querySelector('#guardarUsuario');
+const titulo = document.querySelector('#saludo');
+//Comprobamos si ya hay un usuario guardado
+let usuario = localStorage.getItem("usuario");
+
+if (!usuario){
+    modal.style.display = "flex";
+    console.log("modal abierto");
+}
+
+//Guardaremos el usuario para mas adelante usuarlo mas veces
+guardarBtn.onclick = () => {
+    const nombre = nombreInput.value.trim();
+    console.log(nombre)
+    localStorage.setItem("usuario", nombre);
+    modal.style.display = "none";
+    console.log("Modal cerrado");
+}
+
+titulo.innerHTML = "Bienvenido, " + localStorage.getItem("usuario");
+
 numeroForm.onsubmit = async e => {
     e.preventDefault();
     const form = document.querySelector('#numeroForm');
     const data = {
-        numero: form.querySelector('input[name="numero"]').value
+        numero: form.querySelector('input[name="numero"]').value,
+        user: localStorage.getItem("usuario")
     };
 
     if(data.numero === ''){
         data.numero = 0;
     }
 
-    const response = await fetch('http://localhost:3000/factorial2', {
+    const response = await fetch('http://localhost:3000/factorialFinal', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
