@@ -39,13 +39,19 @@ app.get('/factorial/:num', (req,res) =>{
 //Definimos la ruta factorial2/:num que recibe el parametro dentro del body e una peticion .
 //Aqui es donde se genera la peticion de la pagina Cliente.
 app.post('/factorial2', (req,res) =>{
-    const num = Number(req.body.numero);
-    
-    if(num < 0 || !Number.isInteger(num)){
-        return res.status(500).send("El numero debe ser entero")
-    }
+    console.log(req.body);
+    const status = isNaN(req.body.numero) ? 0 : 1;
 
-    res.send(`El factorial de ${num} es ${factorial(num)}`);
+    if(status === 0) res.status(500).json({
+        status,
+        input: req.body.numero,
+        result: 'no es un número!'
+    })
+    else res.status(200).json({
+        status,
+        input: req.body.numero,
+        result: factorial(req.body.numero)
+    })
 })
 
 
