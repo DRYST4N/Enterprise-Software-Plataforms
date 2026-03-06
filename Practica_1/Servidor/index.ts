@@ -1,6 +1,17 @@
+import dotenv from 'dotenv';
+dotenv.config({path: '../.env'})
 import express from 'express';
 import cors from 'cors';
 import factorial  from './functions/factorial.function.js';
+import  Prisma  from '../generated/prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+
+
+const adapter = new PrismaPg({
+    connectionString: process.env.DATABASE_URL
+});
+
+const prisma = new Prisma.PrismaClient({adapter});
 
 
 //Intanciamos Express
@@ -26,6 +37,7 @@ app.get('/factorial/:num', (req,res) =>{
 
 
 //Definimos la ruta factorial2/:num que recibe el parametro dentro del body e una peticion .
+//Aqui es donde se genera la peticion de la pagina Cliente.
 app.post('/factorial2', (req,res) =>{
     const num = Number(req.body.numero);
     
@@ -36,7 +48,27 @@ app.post('/factorial2', (req,res) =>{
     res.send(`El factorial de ${num} es ${factorial(num)}`);
 })
 
+
+app.post('/factorialFinal', async (req, res) =>{
+    const number = Number(req.body.numero);
+    const nombreUsuario = req.body.user;
+
+    if(number < 0 || !Number.isInteger(number)){
+        return res.status(500).send("El numero debe ser entero")
+    }
+
+    await prisma.factorial.create({
+        data:{
+            base: number,
+            usuario: nombreUsuario || "Anónimo"
+        }
+    });
+    console.log(number, nombreUsuario);
+    res.send(`El factorial de ${number} es ${factorial(number)}`);
+})
+
 //Definimos un puerto 3000 como puerto  de escucha  y mensaje de confirmacion cuando el servidor este levantado.
 app.listen(3000, () =>{
     console.log('Servidor escuchando en el puerto 3000');
 })
+
