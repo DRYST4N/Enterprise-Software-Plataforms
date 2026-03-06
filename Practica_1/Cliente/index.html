@@ -58,6 +58,7 @@ titulo.innerHTML = "Bienvenido, " + localStorage.getItem("usuario");
 
 numeroForm.onsubmit = async e => {
     e.preventDefault();
+    //Saca la informacion del formulario
     const form = document.querySelector('#numeroForm');
     const data = {
         numero: form.querySelector('input[name="numero"]').value,
@@ -75,7 +76,9 @@ numeroForm.onsubmit = async e => {
         },
         body: JSON.stringify(data)
     });
-    const text = await response.text();
-    document.querySelector('#respuesta').innerHTML = text;
+
+    //Procesa la Respuesta del servidor
+    const text = JSON.parse(await response.text());
+    document.querySelector('#respuesta').innerHTML = text.status === 1 ? `El factorial de  ${text.input} es ${text.result}` : `${text.input} ${text.result} ! `;
 }
 </script>
