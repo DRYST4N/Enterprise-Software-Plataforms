@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model movie {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(50)
+  actors      String        @db.VarChar(200)
+  show_timing show_timing[]
+}
+
+model points {
+  id     Int @id @default(autoincrement())
+  points Int
+}
+
+model sales {
+  id     Int   @id @default(autoincrement())
+  amount Float
+}
+
+model show_timing {
+  id         Int      @id @default(autoincrement())
+  day        DateTime @db.Date
+  theater_id Int
+  movie_id   Int
+  timing_id  Int
+
+  theater  theater  @relation(fields: [theater_id], references: [id])
+  movie    movie    @relation(fields: [movie_id], references: [id])
+  timeslot timeslot @relation(fields: [timing_id], references: [id])
+}
+
+model theater {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(50)
+  capacity    Int
+  show_timing show_timing[]
+}
+
+model timeslot {
+  id          Int           @id @default(autoincrement())
+  start_time  String        @db.VarChar(5)
+  end_time    String        @db.VarChar(5)
+  show_timing show_timing[]
+}

@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import { getMoviesByActor } from '../controllers/movie.controller.js';
+import * as MovieController from '../controllers/movie.controller.js';
 import { validate } from '../middlewares/validate.middlewares.js';
-import { CreateMovieSchema } from '../schemas/movie.schemas.js';
+import { FilterByDateSchema, SearchByActorSchema } from '../schemas/movie.schemas.js';
 
 const router = Router();
 
-router.get('/search', getMoviesByActor);
+router.get('/', MovieController.getAllMovies);
+router.get('/search', validate(SearchByActorSchema),MovieController.getMoviesByActor);
+router.get('/by-date', validate(FilterByDateSchema), MovieController.getMoviesByDate);
 
 export default router;
