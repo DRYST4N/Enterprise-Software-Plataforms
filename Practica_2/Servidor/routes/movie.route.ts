@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import * as MovieController from '../controllers/movie.controller.js';
-import { validate } from '../middlewares/validate.middlewares.js';
-import { FilterByDateSchema, SearchByActorSchema } from '../schemas/movie.schemas.js';
+import * as MovieController from '../controllers/movie.controller';
+import { validate } from '../middlewares/validate.middlewares';
+import { FilterByDateSchema, SearchByActorSchema } from '../schemas/movie.schemas';
 
 const router = Router();
 

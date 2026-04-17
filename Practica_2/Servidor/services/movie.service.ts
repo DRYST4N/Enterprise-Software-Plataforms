@@ -1,5 +1,5 @@
 import {PrismaClient} from "../generated/prisma";
-import  { type  MovieDTO } from "../dtos/movie.dto.js";
+import  { type  MovieDTO } from "../dtos/movie.dto";
 
 const prisma = new PrismaClient();
 

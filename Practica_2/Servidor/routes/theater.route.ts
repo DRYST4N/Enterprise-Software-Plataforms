@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import * as TheaterController from '../controllers/theater.controller.js';
-import { validate } from '../middlewares/validate.middlewares.js';
-import { FilterTheaterbyTimeSchema, TheaterIdSchema } from '../schemas/theater.schemas.js';
+import * as TheaterController from '../controllers/theater.controller';
+import { validate } from '../middlewares/validate.middlewares';
+import { FilterTheaterbyTimeSchema, TheaterIdSchema } from '../schemas/theater.schemas';
 
 const router = Router();
 
