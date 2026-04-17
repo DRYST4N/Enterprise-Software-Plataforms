@@ -1,9 +1,12 @@
-import {PrismaClient} from "../generated/prisma";
-import  { type  MovieDTO } from "../dtos/movie.dto";
+import { PrismaClient } from "../generated/prisma";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { type MovieDTO } from "../dtos/movie.dto";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+const prisma = new PrismaClient({ adapter });
 
-//Peliculas disponibles
+
+// Peliculas disponibles
 export const getAllMovies = async () => {
     return await prisma.movie.findMany();
 }
@@ -13,8 +16,8 @@ export const findMoviesByActor = async (actorName: string): Promise<MovieDTO[]> 
     const movies = await prisma.movie.findMany({
         where: {
             actors: {
-                contains: actorName,  //Se busca si el nombre del actor esta en el string
-                mode: 'insensitive' //ignoramos mayusculas y minusculas
+                contains: actorName,
+                mode: 'insensitive'
             }
         }
     });

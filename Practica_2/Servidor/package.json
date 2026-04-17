@@ -1,7 +1,7 @@
 {
   "name": "practica_2",
   "version": "1.0.0",
-  "types": "module",
+  "type": "module",
   "scripts": {
     "dev": "tsx watch index.ts"
   },
