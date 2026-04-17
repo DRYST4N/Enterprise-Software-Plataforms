@@ -1,5 +1,5 @@
 import { type Request, type Response } from 'express';
-import * as MovieService from '../services/movie.service.js';
+import * as MovieService from '../services/movie.service';
 
 export const getMoviesByActor = async (req: Request, res: Response) =>{
     try{

@@ -1,5 +1,5 @@
 import { type Request, type Response } from 'express';
-import * as TheaterService from '../services/theater.service.js';
+import * as TheaterService from '../services/theater.service';
 
 export const getAllTheaters = async (_req: Request, res: Response) => {
     try {
