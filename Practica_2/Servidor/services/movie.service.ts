@@ -1,7 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { type MovieDTO } from "../dtos/movie.dto.js";
+import { PrismaClient } from "../generated/prisma";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { type MovieDTO } from "../dtos/movie.dto";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+const prisma = new PrismaClient({ adapter });
+
 
 // Peliculas disponibles
 export const getAllMovies = async () => {
