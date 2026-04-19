@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import * as MovieController from '../controllers/movie.controller.js';
-import { requireAdmin } from '../middlewares/roles.middlewares.js';
+import { requireAdminOrCinemaOwner } from '../middlewares/roles.middlewares.js';
 import { validate } from '../middlewares/validate.middlewares.js';
 import { FilterByDateSchema, SearchByActorSchema } from '../schemas/movie.schemas.js';
 
@@ -16,8 +16,8 @@ router.get('/search', validate(SearchByActorSchema), MovieController.getMoviesBy
 router.get('/by-date', validate(FilterByDateSchema), MovieController.getMoviesByDate);
 
 // Rutas protegidas (solo ADMIN)
-router.post('/', jwtAuth, requireAdmin, MovieController.createMovie);
-router.put('/:id', jwtAuth, requireAdmin, MovieController.updateMovie);
-router.delete('/:id', jwtAuth, requireAdmin, MovieController.deleteMovie);
+router.post('/', jwtAuth, requireAdminOrCinemaOwner, MovieController.createMovie);
+router.put('/:id', jwtAuth, requireAdminOrCinemaOwner, MovieController.updateMovie);
+router.delete('/:id', jwtAuth, requireAdminOrCinemaOwner, MovieController.deleteMovie);
 
 export default router;

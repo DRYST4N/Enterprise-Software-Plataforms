@@ -63,3 +63,10 @@ export const deleteTheater = async (id: number) => {
         where: { id }
     });
 };
+
+//Devolver un cine
+export const findTheaterUnique = async(id: number) => {
+    return await prisma.theater.findUnique({
+        where: { id }
+    });
+}
