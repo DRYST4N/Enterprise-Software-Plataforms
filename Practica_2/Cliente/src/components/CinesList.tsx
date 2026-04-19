@@ -11,6 +11,7 @@ interface Theater {
   id: number;
   name: string;
   capacity: number;
+  ownerId: number;
 }
 
 export const CinesList = () => {
@@ -72,7 +73,7 @@ export const CinesList = () => {
   const canEdit = (cine: Theater) => {
     if (!user) return false;
     if (isAdmin()) return true;
-    if (user.role === 'CINEMA') return true; // Aquí se puede añadir lógica de permisos por cine
+     if (user.role === 'CINEMA' && cine.ownerId === user.id) return true;
     return false;
   };
 

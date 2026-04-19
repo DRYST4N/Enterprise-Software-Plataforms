@@ -2,7 +2,7 @@ import { Router } from 'express';
 import passport from 'passport';
 import * as TheaterController from '../controllers/theater.controller';
 import { validate } from '../middlewares/validate.middlewares';
-import { requireAdmin } from '../middlewares/roles.middlewares';
+import { requireAdminOrCinemaOwner } from '../middlewares/roles.middlewares';
 import { FilterTheaterbyTimeSchema, TheaterIdSchema } from '../schemas/theater.schemas';
 
 const router = Router();
@@ -15,8 +15,8 @@ router.get('/search-by-time', validate(FilterTheaterbyTimeSchema), TheaterContro
 router.get('/:id/schedule', validate(TheaterIdSchema),TheaterController.getTheaterSchedule);
 
 //Rutas protegidas
-router.post('/', jwtAuth, requireAdmin, TheaterController.createTheater);
-router.put('/:id', jwtAuth, requireAdmin, TheaterController.updateTheater);
-router.delete('/:id', jwtAuth, requireAdmin, TheaterController.deleteTheater);
+router.post('/', jwtAuth, requireAdminOrCinemaOwner, TheaterController.createTheater);
+router.put('/:id', jwtAuth, requireAdminOrCinemaOwner, TheaterController.updateTheater);
+router.delete('/:id', jwtAuth, requireAdminOrCinemaOwner, TheaterController.deleteTheater);
 
 export default router;
