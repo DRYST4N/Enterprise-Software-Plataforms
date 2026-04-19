@@ -15,7 +15,7 @@ router.get('/', MovieController.getAllMovies);
 router.get('/search', validate(SearchByActorSchema), MovieController.getMoviesByActor);
 router.get('/by-date', validate(FilterByDateSchema), MovieController.getMoviesByDate);
 
-// Rutas protegidas (solo ADMIN)
+// Rutas protegidas (solo ADMIN o CINEMAOWNER)
 router.post('/', jwtAuth, requireAdminOrCinemaOwner, MovieController.createMovie);
 router.put('/:id', jwtAuth, requireAdminOrCinemaOwner, MovieController.updateMovie);
 router.delete('/:id', jwtAuth, requireAdminOrCinemaOwner, MovieController.deleteMovie);
