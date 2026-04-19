@@ -1,4 +1,4 @@
-import { PrismaClient } from "../generated/prisma";
+import { PrismaClient } from "../generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { type MovieDTO } from "../dtos/movie.dto";
 
@@ -8,8 +8,14 @@ const prisma = new PrismaClient({ adapter });
 
 // Peliculas disponibles
 export const getAllMovies = async () => {
-    return await prisma.movie.findMany();
-}
+    const movies = await prisma.movie.findMany();
+
+    return movies.map(m => ({
+        id: m.id,
+        titulo: m.name,
+        reparto: m.actors.split(',').map(a => a.trim())
+    }));
+};
 
 // Peliculas por actor
 export const findMoviesByActor = async (actorName: string): Promise<MovieDTO[]> => {
@@ -43,7 +49,7 @@ export const findMoviesByDate = async (date: string): Promise<MovieDTO[]> => {
         titulo: m.name,
         reparto: m.actors.split(',')
     }));
-}
+};
 
 // Cines que contienen una pelicula concreta
 export const findTheaterByMovie = async (movieId: number) => {
@@ -54,4 +60,28 @@ export const findTheaterByMovie = async (movieId: number) => {
             }
         }
     });
-}
+};
+
+
+//Crear pelicula
+
+export const createMovie = async (name: string, actors: string) =>{
+    return await prisma.movie.create({
+        data: { name, actors}
+    });
+};
+
+//Modificar una pelicula
+export const updateMovie = async (id: number, name: string, actors: string) => {
+    return await prisma.movie.update({
+        where: { id },
+        data: { name, actors}
+    });
+};
+
+//Borroa una pelicula
+export const deleteMovie = async (id: number) => {
+    return await prisma.movie.delete({
+        where: { id }
+    });
+};
