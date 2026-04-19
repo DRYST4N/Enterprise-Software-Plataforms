@@ -69,7 +69,6 @@ export const CinesList = () => {
     }
   };
 
-  // Muestra el botón editar si es ADMIN, o si es CINEMA (de momento para todos, en el punto 3.2 se puede restringir por permisos)
   const canEdit = (cine: Theater) => {
     if (!user) return false;
     if (isAdmin()) return true;
