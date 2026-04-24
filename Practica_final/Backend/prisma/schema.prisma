@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model checkout {
+  id           Int       @id @default(autoincrement())
+  usuario_id   Int
+  precio_total Decimal   @db.Decimal(10, 2)
+  fecha_compra DateTime? @default(now()) @db.Timestamp(6)
+  usuario      usuario   @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_checkout")
+  ticket       ticket[]
+}
+
+model cliente {
+  id               Int       @id @default(autoincrement())
+  nombre_completo  String    @db.VarChar(255)
+  dni              String    @unique @db.VarChar(255)
+  fecha_nacimiento DateTime? @db.Date
+  telefono         String?   @db.VarChar(20)
+  usuario_id       Int       @unique
+  usuario          usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario_cliente")
+}
+
+model empresa {
+  id                Int             @id @default(autoincrement())
+  razon_social      String          @db.VarChar(255)
+  cif               String          @unique @db.VarChar(20)
+  domicilio_social  String?
+  nombre_empresa    String          @db.VarChar(255)
+  nombre_contacto   String?         @db.VarChar(255)
+  telefono_contacto String?         @db.VarChar(20)
+  usuario_id        Int             @unique
+  estado            estado_empresa? @default(Espera)
+  usuario           usuario         @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario_empresa")
+}
+
+model entrada {
+  id          Int      @id @default(autoincrement())
+  nombre      String   @db.VarChar(255)
+  precio      Decimal  @db.Decimal(10, 2)
+  descripcion String?
+  festival_id Int
+  festival    festival @relation(fields: [festival_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_festival_entrada")
+  ticket      ticket[]
+}
+
+model festival {
+  id           Int       @id @default(autoincrement())
+  nombre       String    @db.VarChar(255)
+  ubicacion    String?   @db.VarChar(255)
+  descripcion  String?
+  artistas     Json?     @default("[]")
+  fecha_inicio DateTime? @db.Date
+  fecha_fin    DateTime? @db.Date
+  imagen_path  String?   @db.VarChar(500)
+  entrada      entrada[]
+}
+
+model ticket {
+  id          Int      @id @default(autoincrement())
+  entrada_id  Int
+  cantidad    Int      @default(1)
+  checkout_id Int
+  checkout    checkout @relation(fields: [checkout_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chekout_ticket")
+  entrada     entrada  @relation(fields: [entrada_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_entrada_ticket")
+}
+
+model usuario {
+  id       Int             @id @default(autoincrement())
+  correo   String          @unique @db.VarChar(255)
+  pass     String          @db.VarChar(255)
+  role     rol_usuario?    @default(Cliente)
+  estado   estado_usuario? @default(Activo)
+  checkout checkout[]
+  cliente  cliente?
+  empresa  empresa?
+}
+
+enum estado_empresa {
+  Espera
+  Verificado
+  Rechazado
+}
+
+enum estado_usuario {
+  Activo
+  Inactivo
+}
+
+enum rol_usuario {
+  Cliente
+  Empresa
+  ADMIN
+}
