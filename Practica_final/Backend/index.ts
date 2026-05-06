@@ -5,11 +5,12 @@ import passport from 'passport';
 import festivarRoute from './routes/festival.route';
 import entradaRoute from './routes/entrada.route';
 import authRoutes from './routes/auth.route';
+import adminRoutes from './routes/admin.route';
 
 
 const app = express();
 
-app.use(cors);
+app.use(cors());
 app.use(express.json());
 app.use(passport.initialize());
 
@@ -17,6 +18,7 @@ app.use(passport.initialize());
 app.use('/api/festivales', festivarRoute);
 app.use('/api/entradas', entradaRoute);
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 
 
 const PORT = 3000;

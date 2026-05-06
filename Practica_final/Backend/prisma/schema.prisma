@@ -12,6 +12,8 @@ model checkout {
   usuario_id   Int
   precio_total Decimal   @db.Decimal(10, 2)
   fecha_compra DateTime? @default(now()) @db.Timestamp(6)
+  transaction_id String?   @db.VarChar(255)
+  card_last4   String?   @db.VarChar(4)
   usuario      usuario   @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_checkout")
   ticket       ticket[]
 }
@@ -45,6 +47,7 @@ model entrada {
   nombre      String   @db.VarChar(255)
   precio      Decimal  @db.Decimal(10, 2)
   descripcion String?
+  stock       Int      @default(100)
   festival_id Int
   festival    festival @relation(fields: [festival_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_festival_entrada")
   ticket      ticket[]
@@ -59,6 +62,8 @@ model festival {
   fecha_inicio DateTime? @db.Date
   fecha_fin    DateTime? @db.Date
   imagen_path  String?   @db.VarChar(500)
+  cancelado    Boolean   @default(false)
+  aforo        Int? 
   empresa_id   Int?
   entrada      entrada[]
   empresa      empresa?  @relation(fields: [empresa_id], references: [id], onDelete: NoAction, onUpdate: NoAction)

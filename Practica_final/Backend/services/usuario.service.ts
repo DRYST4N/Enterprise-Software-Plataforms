@@ -33,6 +33,8 @@ export class UsuarioService{
                     data:{
                         nombre_completo: data.nombre_completo!,
                         dni: data.dni!,
+                        fecha_nacimiento: data.fecha_nacimiento!,
+                        telefono: data.telefono!,
                         usuario_id: usuario.id,
                     },
                 });
@@ -42,6 +44,9 @@ export class UsuarioService{
                         razon_social: data.razon_social!,
                         cif: data.cif!,
                         nombre_empresa: data.nombre_empresa!,
+                        domicilio_social:data.domicilio_social!,
+                        nombre_contacto:data.nombre_contacto!,
+                        telefono_contacto:data.telefono_contacto!,
                         usuario_id: usuario.id,
                     },
                 });

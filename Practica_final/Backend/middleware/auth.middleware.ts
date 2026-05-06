@@ -12,3 +12,13 @@ export const checkRole = (roles: string[]) => {
         return res.status(403).json({ message: "No tienes permisos para esta accion"});
     };
 };
+
+export const checkEmpresa = () => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const user = req.user as any;
+        if (user && user.role === 'Empresa'){
+            return next();
+        }
+        return res.status(403).json({ message: "No tienes permisos para esta accion"});
+    };
+};
