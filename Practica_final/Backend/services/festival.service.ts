@@ -1,4 +1,4 @@
-import { PrismaClient } from "../generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { FestivalDTO } from '../dtos/festival.dto';
 
@@ -18,6 +18,15 @@ export class FestivalService {
             include: { entrada: true }
         });
     } 
+
+    static async getByDate(date: Date) {
+        const searchDate = new Date(date);
+
+        return await prisma.festival.findMany({
+            where: { 
+                fecha_inicio: searchDate},
+        });
+    }
 
     static async create(data: FestivalDTO){
         return await prisma.festival.create({
