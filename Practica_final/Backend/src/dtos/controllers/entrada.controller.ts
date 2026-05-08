@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { EntradaService } from "../services/entrada.service";
-import { CreateEntradaSchema } from "../schemas/entrada.schema";
+import { EntradaService } from "../../services/entrada.service";
+import { CreateEntradaSchema } from "../../schemas/entrada.schema";
 
 
 export const CreateEntrada = async (req: Request, res: Response) =>{

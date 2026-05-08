@@ -1,6 +1,6 @@
 import { Request, Response} from 'express';
-import { FestivalService } from '../services/festival.service';
-import { comprobarFecha, CreateFestivalSchema } from '../schemas/festival.schema';
+import { FestivalService } from '../../services/festival.service';
+import { comprobarFecha, CreateFestivalSchema } from '../../schemas/festival.schema';
 
 export const createFestival = async (req: Request, res: Response) => {
     try{

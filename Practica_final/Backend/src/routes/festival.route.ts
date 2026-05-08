@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getFestivales, createFestival, getFestivalesPosibles } from "../controllers/festival.controller";
+import { getFestivales, createFestival, getFestivalesPosibles } from "../dtos/controllers/festival.controller";
 import { checkEmpresa } from "../middleware/auth.middleware";
 
 const router = Router();

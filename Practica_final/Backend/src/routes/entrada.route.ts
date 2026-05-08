@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { CreateEntrada } from "../controllers/entrada.controller";
+import { CreateEntrada } from "../dtos/controllers/entrada.controller";
 import { checkEmpresa } from "../middleware/auth.middleware";
 
 const router = Router();

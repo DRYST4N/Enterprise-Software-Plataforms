@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getEmpresas, verificarEmpresa, rechazarEmpresa } from '../controllers/admin.controller';
+import { getEmpresas, verificarEmpresa, rechazarEmpresa } from '../dtos/controllers/admin.controller';
 import { checkAdmin } from '../middleware/auth.middleware';
 
 const route = Router();
