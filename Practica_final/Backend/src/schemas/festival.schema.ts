@@ -15,3 +15,4 @@ export const comprobarFecha = z.object({
     fecha_inicio: z.coerce.date()
 });
 
+export const UpdateFestivalSchema = CreateFestivalSchema.partial();

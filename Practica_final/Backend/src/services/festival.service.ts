@@ -45,7 +45,43 @@ export class FestivalService {
             where: { id }
         });
     }
+
+    static async getDisponibles(fechaActual: Date){
+        return await prisma.festival.findMany({
+            where: {
+                cancelado: false,
+                OR: [
+                    {
+                        fecha_inicio:{
+                            gte: fechaActual,
+                        },
+                    },
+                    {
+                        fecha_inicio: null,
+                    }
+                ],
+            }
+        });
+    }
+
+    static async getByEmpresa(empresaId: number){
+        return await prisma.festival.findMany({
+            where: {
+                empresa_id: empresaId
+            },
+            include: { entrada:true},
+        });
+    }
+
+    static async cancel(id: number){
+        return await prisma.festival.update({
+            where: { id },
+            data:{ cancelado: true}
+        });
+    }
 }
+
+
 
 
 
