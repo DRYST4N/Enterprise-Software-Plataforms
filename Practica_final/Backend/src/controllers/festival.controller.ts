@@ -1,11 +1,13 @@
 import { Request, Response} from 'express';
-import { FestivalService } from '../../services/festival.service';
-import { comprobarFecha, CreateFestivalSchema } from '../../schemas/festival.schema';
+import { FestivalService } from '../services/festival.service';
+import { comprobarFecha, CreateFestivalSchema } from '../schemas/festival.schema';
 
 export const createFestival = async (req: Request, res: Response) => {
     try{
         const validatedData = CreateFestivalSchema.parse(req.body);
-        const result = await FestivalService.create(validatedData);
+        const empresa_id = (req as any).user.empresa.id;
+        const datos = {...validatedData, empresa_id: empresa_id}
+        const result = await FestivalService.create(datos);
         res.status(201).json(result);
     }catch( error: any){
         if(error.name === 'ZodError'){
@@ -17,7 +19,7 @@ export const createFestival = async (req: Request, res: Response) => {
 };
 
 export const getFestivales = async (_req: Request, res: Response) => {
-    const result = FestivalService.getAll();
+    const result = await FestivalService.getAll();
     res.json(result);
 };
 

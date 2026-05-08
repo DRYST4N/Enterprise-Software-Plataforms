@@ -1,7 +1,7 @@
 import express from 'express';
 import 'dotenv/config'
 import cors from 'cors';
-import passport from 'passport';
+import passport from './config/passport';
 import festivarRoute from './routes/festival.route';
 import entradaRoute from './routes/entrada.route';
 import authRoutes from './routes/auth.route';

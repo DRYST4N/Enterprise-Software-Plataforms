@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { EntradaService } from "../../services/entrada.service";
-import { CreateEntradaSchema } from "../../schemas/entrada.schema";
+import { EntradaService } from "../services/entrada.service";
+import { CreateEntradaSchema } from "../schemas/entrada.schema";
 
 
 export const CreateEntrada = async (req: Request, res: Response) =>{
     try{
         const validatedData = CreateEntradaSchema.parse(req.body);
-        const result = EntradaService.create(validatedData);
+        const result = await EntradaService.create(validatedData);
         res.status(201).json(result);
     }catch( error: any ){
         if(error.name === 'ZodError'){

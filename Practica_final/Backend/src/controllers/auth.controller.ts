@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { UsuarioService } from '../../services/usuario.service';
+import { UsuarioService } from '../services/usuario.service';
 import jwt from 'jsonwebtoken';
-import { RegistroSchema } from '../../schemas/auth.schema';
+import { RegistroSchema } from '../schemas/auth.schema';
 
 export const login = async (req: Request, res: Response) => {
     const { correo, pass}  = req.body;

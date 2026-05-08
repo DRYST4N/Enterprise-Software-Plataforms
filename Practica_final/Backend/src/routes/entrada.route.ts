@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { CreateEntrada } from "../dtos/controllers/entrada.controller";
-import { checkEmpresa } from "../middleware/auth.middleware";
+import { CreateEntrada } from "../controllers/entrada.controller";
+import { checkRole } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.post('/create', checkEmpresa, CreateEntrada );
+router.post('/create', checkRole(['EMPRESA']), CreateEntrada );
 
 export default router;

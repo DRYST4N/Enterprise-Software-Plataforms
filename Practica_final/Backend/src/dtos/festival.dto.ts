@@ -6,6 +6,9 @@ export interface FestivalDTO{
     fecha_inicio?: Date | null;
     fecha_fin?: Date | null;
     imagen_path?: string | null;
+    empresa_id: string;
+    aforo: number;
+    cancelado?: boolean
 }
 
 export interface FestivalDTOResponseDTO extends FestivalDTO{

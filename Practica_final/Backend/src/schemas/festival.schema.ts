@@ -8,6 +8,7 @@ export const CreateFestivalSchema = z.object({
     fecha_inicio: z.coerce.date().optional().nullable(),
     fecha_fin: z.coerce.date().optional().nullable(),
     imagen_path: z.string().max(500).optional().nullable(),
+    aforo: z.number(),
 });
 
 export const comprobarFecha = z.object({
