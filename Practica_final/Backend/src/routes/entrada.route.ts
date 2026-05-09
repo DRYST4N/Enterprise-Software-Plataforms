@@ -4,6 +4,6 @@ import { checkRole } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.post('/create', checkRole(['EMPRESA']), CreateEntrada );
+router.post('/create', checkRole(['Empresa']), CreateEntrada );
 
 export default router;
