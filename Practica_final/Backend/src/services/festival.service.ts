@@ -79,6 +79,18 @@ export class FestivalService {
             data:{ cancelado: true}
         });
     }
+
+    static async misVentas(empresa_id: number){
+        return await prisma.festival.findMany({
+            where: {empresa_id},
+            include:{ 
+                entrada: {
+                    include: {
+                        ticket: true
+                    }
+                }}
+        });
+    }
 }
 
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getFestivales, createFestival, getFestivalesDisponibles, getMisFestivales, cancelarFestival, editarFestival } from "../controllers/festival.controller";
+import { getFestivales, createFestival, getFestivalesDisponibles, getMisFestivales, cancelarFestival, editarFestival, getMisVentas } from "../controllers/festival.controller";
 import { checkRole, authenticate } from "../middleware/auth.middleware";
 
 const router = Router();
@@ -9,5 +9,6 @@ router.post('/', authenticate, checkRole(['Empresa']), createFestival);//Crear e
 router.get('/disponibles', getFestivalesDisponibles); //Este si que es para clientes
 router.patch('/:id/cancel', authenticate, checkRole(['Empresa']), cancelarFestival); //Este para cancelar los festivales
 router.patch('/:id/update', authenticate, checkRole(['Empresa']), editarFestival);//Para editar el festival
+router.get('/mis-ventas', authenticate, checkRole(['Empresa']), getMisVentas); //Para obtener las ventas de cada festival de cada empresa
 
 export default router;

@@ -145,4 +145,32 @@ export const editarFestival = async (req: Request, res: Response) => {
     }catch(error: any){
         return res.status(500).json({error: error.message});
     }
-}
+};
+
+export const getMisVentas = async (req: Request, res: Response) => {
+    try{
+        const empresa_id = (req as any).user.empresa.id;
+    const festivales = await FestivalService.misVentas(empresa_id);
+
+    const estadisticas = festivales.map(festival => {
+        const totales = festival.entrada.reduce((acc, ent) => {
+            const cantidadTicketsEntradas = ent.ticket.reduce((sum, t) => sum + t.cantidad, 0);
+            
+            acc.totalEntradas += cantidadTicketsEntradas;
+            acc.totalRecaudado += cantidadTicketsEntradas * Number(ent.precio);
+            
+            return acc;
+            }, {totalEntradas: 0, totalRecaudado: 0});
+
+            return {
+                id: festival.id,
+                nombre: festival.nombre,
+                totalEntradas: totales.totalEntradas,
+                totalRecaudado: totales.totalRecaudado,
+            };
+        });
+        res.json(estadisticas);
+    }catch{
+        return res.status(500).json({ error: 'Error al calcular ventas'});
+    }
+};
