@@ -37,5 +37,18 @@ export class CheckoutService {
             );
             return {checkout};
         });
+    };
+
+    static async getMisCompras(usuario_id: number){
+        return await prisma.checkout.findMany({
+            where: {usuario_id},
+            include:{
+                ticket:{
+                    include:{
+                        entrada: true
+                    }
+                }
+            }
+        })
     }
 }

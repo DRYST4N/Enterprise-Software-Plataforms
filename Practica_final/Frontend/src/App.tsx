@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Festivales from './pages/Festivales';
 import Empresa from './pages/Empresa';
 import Checkout from './pages/Checkout';
+import MisCompras from './pages/MisCompras';
 
 // Ruta protegida por rol
 const PrivateRoute = ({ children, role }: { children: ReactNode; role: 'Cliente' | 'Empresa' }) => {
@@ -37,6 +38,11 @@ const AppRoutes = () => {
       <Route path="/checkout/:id" element={
         <PrivateRoute role="Cliente">
           <Checkout />
+        </PrivateRoute>
+      } />
+      <Route path="/mis-compras" element={
+        <PrivateRoute role="Cliente">
+          <MisCompras />
         </PrivateRoute>
       } />
 

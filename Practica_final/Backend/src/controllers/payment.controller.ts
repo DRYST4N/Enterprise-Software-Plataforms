@@ -66,4 +66,18 @@ async function calculadorTotalCarrito(items: CartItem[]): Promise<number> {
     const total = subtotales.reduce((acc, current) => acc + current, 0);
 
     return total;
+};
+
+
+export const getMisCompras = async (req: Request, res: Response) => {
+    try{
+        const usuario_id = (req as any).user.id;
+        const datos = await CheckoutService.getMisCompras(usuario_id);
+        if(datos.length === 0) {
+            return res.status(404).json({message: 'Datos no encotrados'});
+        };
+        return res.status(200).json(datos);
+    }catch(error: any){
+        return res.status(500).json({error: error.message})
+    }
 }
