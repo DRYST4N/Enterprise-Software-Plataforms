@@ -45,3 +45,13 @@ export const register = async(req: Request, res: Response ) => {
         res.status(500).json({ error: "Error en el servidor durante el registro" });
     }
 };
+
+export const borrarCuenta = async (req: Request, res: Response) => {
+    try{
+        const usuarioId = (req as any).user.id;
+        const user = await UsuarioService.delete(usuarioId);
+        return res.status(200).json({message: 'Usuario borrado'});
+    }catch (error: any){
+        return res.status(500).json({error: error.message});
+    }
+}

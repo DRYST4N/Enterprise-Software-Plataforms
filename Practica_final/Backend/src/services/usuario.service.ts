@@ -54,5 +54,12 @@ export class UsuarioService{
 
             return usuario;
         });
+    };
+
+
+    static async delete(id: number){
+        return await prisma.usuario.delete({
+            where: {id}
+        });
     }
 }
