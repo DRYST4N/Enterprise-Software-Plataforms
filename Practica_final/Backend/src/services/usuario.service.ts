@@ -62,4 +62,18 @@ export class UsuarioService{
             where: {id}
         });
     }
+
+    static async Cliente(id: number){
+        return await prisma.cliente.findUnique({
+            where: {usuario_id: id},
+            include: {usuario: true}
+        });
+    }
+
+    static async Empresa(id: number){
+        return await prisma.empresa.findUnique({
+            where: {usuario_id: id},
+            include: {usuario: true}
+        });
+    }
 }

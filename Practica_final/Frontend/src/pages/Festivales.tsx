@@ -33,6 +33,7 @@ const Festivales = () => {
         <button className="btn btn-outline-danger" onClick={handleLogout}>
           Cerrar sesión
         </button>
+        <button className="btn" onClick={() => navigate('/me')}>Perfil</button>
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}

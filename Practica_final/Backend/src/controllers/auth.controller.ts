@@ -54,4 +54,20 @@ export const borrarCuenta = async (req: Request, res: Response) => {
     }catch (error: any){
         return res.status(500).json({error: error.message});
     }
+};
+
+export const getMisDatos = async (req: Request, res: Response) => {
+    try{
+        const userId = (req as any).user.id;
+        const role = (req as any).user.role;
+        if(role === 'Empresa'){
+            const datos = await UsuarioService.Empresa(userId);
+            return res.status(200).json(datos);
+        }else{
+            const datos = await UsuarioService.Cliente(userId);
+            return res.status(200).json(datos);
+        }
+    }catch(error: any){
+        return res.status(500).json({ error: error.message});
+    }
 }

@@ -84,6 +84,7 @@ const Empresa = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>🏢 Panel de Empresa</h2>
         <button className="btn btn-outline-danger" onClick={handleLogout}>Cerrar sesión</button>
+        <button className='btn' onClick={()=> navigate('/me')}>Perfil</button>
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}

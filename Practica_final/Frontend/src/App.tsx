@@ -7,12 +7,13 @@ import Festivales from './pages/Festivales';
 import Empresa from './pages/Empresa';
 import Checkout from './pages/Checkout';
 import MisCompras from './pages/MisCompras';
+import Perfil from './pages/Perfil';
 
 // Ruta protegida por rol
-const PrivateRoute = ({ children, role }: { children: ReactNode; role: 'Cliente' | 'Empresa' }) => {
+const PrivateRoute = ({ children, roles }: { children: ReactNode; roles: Array<'Cliente' | 'Empresa'> }) => {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" />;
-  if (user.role !== role) return <Navigate to="/login" />;
+  if (!roles.includes(user.role as 'Cliente' | 'Empresa')) return <Navigate to="/login" />;
   return children;
 };
 
@@ -25,24 +26,30 @@ const AppRoutes = () => {
       <Route path="/register" element={!user ? <Register /> : <Navigate to="/login" />} />
 
       <Route path="/festivales" element={
-        <PrivateRoute role="Cliente">
+        <PrivateRoute roles={["Cliente"]}>
           <Festivales />
         </PrivateRoute>
       } />
 
       <Route path="/empresa" element={
-        <PrivateRoute role="Empresa">
+        <PrivateRoute roles={["Empresa"]}>
           <Empresa />
         </PrivateRoute>
       } />
       <Route path="/checkout/:id" element={
-        <PrivateRoute role="Cliente">
+        <PrivateRoute roles={["Cliente"]}>
           <Checkout />
         </PrivateRoute>
       } />
       <Route path="/mis-compras" element={
-        <PrivateRoute role="Cliente">
+        <PrivateRoute roles={["Cliente"]}>
           <MisCompras />
+        </PrivateRoute>
+      } />
+
+      <Route path="/me" element={
+        <PrivateRoute roles={["Cliente", "Empresa"]}>
+          <Perfil />
         </PrivateRoute>
       } />
 
