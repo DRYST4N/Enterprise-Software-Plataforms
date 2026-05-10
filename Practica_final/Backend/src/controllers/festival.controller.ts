@@ -174,3 +174,16 @@ export const getMisVentas = async (req: Request, res: Response) => {
         return res.status(500).json({ error: 'Error al calcular ventas'});
     }
 };
+
+export const getEntradasFestival = async(req: Request, res: Response) => {
+    try{
+        const festivalId = Number(req.params.id);
+        const festival = await FestivalService.getById(festivalId);
+        if (!festival){
+            return res.status(404).json({message:"No existe dicho festival"});
+        }
+        return res.status(200).json({festival});
+    }catch(error: any){
+        return res.status(500).json({ error: error.message});
+    }
+}

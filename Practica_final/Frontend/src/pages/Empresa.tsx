@@ -15,6 +15,7 @@ const Empresa = () => {
   const [festivalForm, setFestivalForm] = useState({
     nombre: '', ubicacion: '', descripcion: '',
     artistas: '', fecha_inicio: '', fecha_fin: '',
+    aforo: ''
   });
 
   // Form entrada
@@ -24,7 +25,7 @@ const Empresa = () => {
 
   const fetchFestivales = async () => {
     try {
-      const res = await api.get('/festivales');
+      const res = await api.get('/festivales/mis-festivales');
       setFestivales(res.data);
     } catch {
       setError('Error al cargar festivales');
@@ -50,9 +51,10 @@ const Empresa = () => {
         artistas: festivalForm.artistas.split(',').map(a => a.trim()).filter(Boolean),
         fecha_inicio: festivalForm.fecha_inicio || undefined,
         fecha_fin: festivalForm.fecha_fin || undefined,
+        aforo: festivalForm.aforo
       });
       setSuccessMsg('Festival creado correctamente');
-      setFestivalForm({ nombre: '', ubicacion: '', descripcion: '', artistas: '', fecha_inicio: '', fecha_fin: '' });
+      setFestivalForm({ nombre: '', ubicacion: '', descripcion: '', artistas: '', fecha_inicio: '', fecha_fin: '', aforo: '' });
       fetchFestivales();
     } catch (err: any) {
       setError(err.response?.data?.error || 'Error al crear festival');
@@ -118,6 +120,10 @@ const Empresa = () => {
                 <label className="form-label text-muted small">Fecha fin</label>
                 <input name="fecha_fin" type="date" className="form-control"
                   value={festivalForm.fecha_fin} onChange={handleFestivalChange} />
+              </div>
+              <div className='"mb-3'>
+                <label className='form-label text-muted small'>Aforo</label>
+                <input name="aforo" type="number" className='form-control' value={festivalForm.aforo} onChange={handleFestivalChange}/>
               </div>
               <button type="submit" className="btn btn-primary w-100">Crear Festival</button>
             </form>

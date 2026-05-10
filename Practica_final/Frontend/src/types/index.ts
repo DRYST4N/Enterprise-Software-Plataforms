@@ -7,6 +7,7 @@ export interface Festival {
     fecha_inicio?: string;
     fecha_fin?: string;
     imagen_path?: string; 
+    entrada?: Entrada[];
 }
 
 export interface Entrada {
@@ -15,4 +16,5 @@ export interface Entrada {
     precio: number;
     descripcion: string;
     festival_id: number;
+    stock: number;
 }

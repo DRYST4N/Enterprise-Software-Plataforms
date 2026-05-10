@@ -13,7 +13,7 @@ const Festivales = () => {
     useEffect(() => {
         const fetchFestivales = async () => {
             try{
-                const res = await api.get('/festivales/festivales');
+                const res = await api.get('/festivales/disponibles');
                 setFestivales(res.data);
             }catch{
                 setError("Error al cargar festivales");
@@ -53,7 +53,7 @@ const Festivales = () => {
                   style={{ height: '180px', objectFit: 'cover' }}
                 />
               )}
-              <div className="card-body">
+              <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{festival.nombre}</h5>
                 {festival.ubicacion && (
                   <p className="text-muted mb-1">📍 {festival.ubicacion}</p>
@@ -72,6 +72,14 @@ const Festivales = () => {
                     {festival.fecha_fin && ` → ${new Date(festival.fecha_fin).toLocaleDateString('es-ES')}`}
                   </p>
                 )}
+                <div className="mt-auto pt-3">
+                  <button 
+                    className="btn btn-primary w-100" 
+                    onClick={() => navigate(`/checkout/${festival.id}`)}
+                  >
+                    🎟️ Comprar entradas
+                  </button>
+                </div>
               </div>
             </div>
           </div>
