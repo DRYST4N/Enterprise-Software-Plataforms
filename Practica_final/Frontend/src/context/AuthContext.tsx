@@ -1,14 +1,16 @@
 import { createContext, useContext, useState } from 'react';
 import type {ReactNode} from 'react';
 
+type UserRole = 'ADMIN' | 'Cliente' | 'Empresa';
+
 interface AuthUser {
     token: string,
-    role: 'Cliente' | 'Empresa';
+    role: UserRole;
 }
 
 interface AuthContextType {
     user: AuthUser | null,
-    login: (token: string, role: 'Cliente' | 'Empresa') => void;
+    login: (token: string, role: UserRole) => void;
     logout: () => void;
 }
 
@@ -17,11 +19,11 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) =>{
     const [user, setUser] = useState<AuthUser | null>(() => {
         const token  = localStorage.getItem('token');
-        const role = localStorage.getItem('role') as 'Cliente' | 'Empresa' | null;
+        const role = localStorage.getItem('role') as UserRole | null;
         return token && role ? { token, role } : null;
     });
 
-    const login = (token: string, role: 'Cliente' | 'Empresa' ) => {
+    const login = (token: string, role: UserRole ) => {
         localStorage.setItem('token', token);
         localStorage.setItem('role', role);
         setUser({ token, role });
