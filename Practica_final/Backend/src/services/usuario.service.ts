@@ -76,4 +76,12 @@ export class UsuarioService{
             include: {usuario: true}
         });
     }
+
+    static async updateCliente(usuario_id: number, data: { nombre_completo?: string; telefono?: string}){
+        return await prisma.cliente.update({where: {usuario_id}, data});
+    }
+
+    static async updateEmpresa(usuario_id: number, data: {nombre_empresa?: string; nombre_contacto?: string; telefono_contacto?: string}){
+        return prisma.empresa.update({ where: { usuario_id }, data});
+    }
 }
