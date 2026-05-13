@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/api';
-import type { Festival } from '../types';
+import { type VentaFestival, type Festival } from '../types';
 
 const Empresa = () => {
   const { logout } = useAuth();
@@ -23,12 +23,70 @@ const Empresa = () => {
     nombre: '', precio: '', descripcion: '', festival_id: '',
   });
 
+  const [estadoEmpresa, setEstadoEmpresa] = useState<string | null>(null);
+  const [loadingEmpresa, setLoadingEmpresa] = useState(true);
+
+  const [ventas, setVentas] = useState<VentaFestival[]>([]);
+
+  const [editandoId, setEditandoId] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({
+    nombre: '', ubicacion:'', descripcion: '',
+    artistas: '', fecha_inicio: '', fecha_fin: '', aforo: ''
+  });
+
+  const abrirEdicion = (f: Festival) => {
+    setEditandoId(f.id);
+    setEditForm({
+      nombre: f.nombre,
+      ubicacion: f.ubicacion || '',
+      descripcion: f.descripcion || '',
+      artistas: (f.artistas || []).join(', '),
+      fecha_inicio: f.fecha_inicio ? f.fecha_inicio.split('T')[0] : '',
+      fecha_fin: f.fecha_fin ? f.fecha_fin.split('T')[0]: '',
+      aforo: ''
+    });
+  };
+
   const fetchFestivales = async () => {
     try {
       const res = await api.get('/festivales/mis-festivales');
+      const me = await api.get('/auth/mis-datos');
+      const venRes = await api.get('/festivales/mis-ventas');
       setFestivales(res.data);
+      setEstadoEmpresa(me.data.estado);
+      setVentas(venRes.data);
     } catch {
       setError('Error al cargar festivales');
+    } finally {
+      setLoadingEmpresa(false);
+    }
+  };
+
+  const cancelarFestival = async (id: number) => {
+    if(!window.confirm('¿Seguro que quiere cancelar este festival?')) return;
+    try{
+      await api.patch(`/festivales/${id}/cancel`);
+      setSuccessMsg('Festival cancelado correctamente');
+      fetchFestivales();
+    }catch(error: any){
+      setError(error.response?.data?.message || 'Error al cancelar el festival');
+    }
+  };
+
+  const guardarEdicion = async (id: number) => {
+    try {
+      await api.patch(`/festivales/${id}/update`, {
+        ...editForm,
+        artistas: editForm.artistas.split(',').map(a => a.trim()).filter(Boolean),
+        fecha_inicio: editForm.fecha_inicio || undefined,
+        fecha_fin: editForm.fecha_fin || undefined,
+        aforo: editForm.aforo ? parseInt(editForm.aforo) : undefined,
+      });
+      setSuccessMsg('Festival actualizado');
+      setEditandoId(null);
+      fetchFestivales();
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Error al editar el festival');
     }
   };
 
@@ -42,6 +100,10 @@ const Empresa = () => {
     setEntradaForm({ ...entradaForm, [e.target.name]: e.target.value });
   };
 
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  setEditForm({ ...editForm, [e.target.name]: e.target.value });
+};
+
   const crearFestival = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(''); setSuccessMsg('');
@@ -51,7 +113,7 @@ const Empresa = () => {
         artistas: festivalForm.artistas.split(',').map(a => a.trim()).filter(Boolean),
         fecha_inicio: festivalForm.fecha_inicio || undefined,
         fecha_fin: festivalForm.fecha_fin || undefined,
-        aforo: festivalForm.aforo
+        aforo: parseInt(festivalForm.aforo)
       });
       setSuccessMsg('Festival creado correctamente');
       setFestivalForm({ nombre: '', ubicacion: '', descripcion: '', artistas: '', fecha_inicio: '', fecha_fin: '', aforo: '' });
@@ -78,6 +140,15 @@ const Empresa = () => {
   };
 
   const handleLogout = () => { logout(); navigate('/login'); };
+  if(loadingEmpresa) return <div>Cargando...</div>;
+  if(estadoEmpresa !== 'Verificado') return (
+    <div className='container py-5 text-center'>
+      <h3>Cuenta pendiente de verificación</h3>
+      <p>Un administrador revisará tu empresa en breve.</p>
+      {estadoEmpresa === 'Rechazado' && <p className='text-danger'>Tu empresa ha sido rechazada.</p>}
+      <button className='btn btn-outline-danger mt-3' onClick={handleLogout}>Cerrar sesión</button>
+    </div>
+  );
 
   return (
     <div className="container py-4">
@@ -164,23 +235,146 @@ const Empresa = () => {
       </div>
 
       {/* Lista de festivales */}
-      <div className="mt-5">
-        <h5>📋 Festivales registrados</h5>
-        {festivales.length === 0 && <p className="text-muted">No hay festivales aún.</p>}
-        <div className="row g-3 mt-1">
-          {festivales.map(f => (
-            <div className="col-md-4" key={f.id}>
-              <div className="card shadow-sm p-3">
-                <h6>{f.nombre}</h6>
-                {f.ubicacion && <p className="text-muted mb-1 small">📍 {f.ubicacion}</p>}
-                {f.fecha_inicio && (
-                  <p className="mb-0 small">
-                    📅 {new Date(f.fecha_inicio).toLocaleDateString('es-ES')}
-                  </p>
-                )}
+        <div className="mt-5">
+          <h5>📋 Festivales registrados</h5>
+          {festivales.length === 0 && <p className="text-muted">No hay festivales aún.</p>}
+          <div className="row g-3 mt-1">
+            {festivales.map(f => (
+              <div className="col-md-6" key={f.id}> {/* He cambiado a col-md-6 para que el formulario tenga espacio */}
+                <div className="card shadow-sm p-3">
+                  <h6>{f.nombre}</h6>
+                  {f.ubicacion && <p className="text-muted mb-1 small">📍 {f.ubicacion}</p>}
+                  {f.fecha_inicio && (
+                    <p className="mb-0 small">
+                      📅 {new Date(f.fecha_inicio).toLocaleDateString('es-ES')}
+                    </p>
+                  )}
+
+                  <div className="mt-2">
+                    <button
+                      className="btn btn-sm btn-danger me-2"
+                      onClick={() => cancelarFestival(f.id)}
+                    >
+                      Cancelar festival
+                    </button>
+                    
+                    {/* BOTÓN EDITAR */}
+                    <button
+                      className="btn btn-sm btn-warning"
+                      onClick={() => abrirEdicion(f)}
+                    >
+                      Editar
+                    </button>
+                  </div>
+
+                  {/* FORMULARIO DE EDICIÓN CONDICIONAL */}
+                  {editandoId === f.id && (
+                    <div className="mt-3 p-3 border-top bg-light rounded">
+                      <h5 className="fw-bold d-block mb-2">Editando: {f.nombre}</h5>
+                      
+                      <input 
+                        name="nombre" 
+                        className="form-control form-control-sm mb-2" 
+                        value={editForm.nombre} 
+                        onChange={handleEditChange} 
+                        placeholder="Nombre"
+                      />
+                      <input 
+                        name="ubicacion" 
+                        className="form-control form-control-sm mb-2" 
+                        value={editForm.ubicacion} 
+                        onChange={handleEditChange} 
+                        placeholder="Ubicación"
+                      />
+                      <textarea 
+                        name="descripcion" 
+                        className="form-control form-control-sm mb-2" 
+                        value={editForm.descripcion} 
+                        onChange={handleEditChange} 
+                        placeholder="Descripción"
+                      />
+                      <input 
+                        name="artistas" 
+                        className="form-control form-control-sm mb-2" 
+                        value={editForm.artistas} 
+                        onChange={handleEditChange} 
+                        placeholder="Artistas (coma, para separar)"
+                      />
+                      <div className="row g-2 mb-2">
+                        <div className="col">
+                          <label className="very-small text-muted">Inicio</label>
+                          <input name="fecha_inicio" type="date" className="form-control form-control-sm" value={editForm.fecha_inicio} onChange={handleEditChange} />
+                        </div>
+                        <div className="col">
+                          <label className="very-small text-muted">Fin</label>
+                          <input name="fecha_fin" type="date" className="form-control form-control-sm" value={editForm.fecha_fin} onChange={handleEditChange} />
+                        </div>
+                      </div>
+                      <input 
+                        name="aforo" 
+                        type="number" 
+                        className="form-control form-control-sm mb-3" 
+                        value={editForm.aforo} 
+                        onChange={handleEditChange} 
+                        placeholder="Aforo"
+                      />
+
+                      <div className="d-flex gap-2">
+                        <button 
+                          className="btn btn-success btn-sm w-100" 
+                          onClick={() => guardarEdicion(f.id)}
+                        >
+                          Guardar Cambios
+                        </button>
+                        <button 
+                          className="btn btn-secondary btn-sm" 
+                          onClick={() => setEditandoId(null)}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        {/** Reporte de ventas */}
+      <div className='mt-5 mb-5'>
+        <h5 className='mb-3'> Reportes de Ventas</h5>
+        <div className='card shadow-sm'>
+          <div className='table-responsive'>
+            <table className='table table-hover mb-0'>
+              <thead className='table-dark'>
+                <tr>
+                  <th>Nombre del festival</th>
+                  <th className='text-center'>Entradas Vendidas</th>
+                  <th className='text-end'>Total Recaudado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ventas.length === 0 ? (
+                  <tr>
+                    <td colSpan={3} className='text-center py-3 text-muted'>No se han registrado ventas todavía</td>
+                  </tr>
+                ): (
+                  ventas.map((v)=> (
+                    <tr key={v.id}>
+                      <td className='fw-bold'>{v.nombre}</td>
+                      <td className='text-center'>
+                        <span className='badge bg-info text-dark'>{v.totalEntradas}</span>
+                      </td>
+                      <td className='text-end fw-bold text-success'>
+                        {Number(v.totalRecaudado).toFixed(2)}€
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

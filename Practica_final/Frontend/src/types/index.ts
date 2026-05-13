@@ -18,3 +18,11 @@ export interface Entrada {
     festival_id: number;
     stock: number;
 }
+
+
+export interface VentaFestival {
+    id: number;
+    nombre: string;
+    totalEntradas: number;
+    totalRecaudado: number;
+}
