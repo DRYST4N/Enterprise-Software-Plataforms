@@ -16,7 +16,6 @@ export const RegistroSchema = z.object({
     //Datos para la empresa
     razon_social: z.string().optional(),
     cif: z.string().optional(),
-    nombre_empresa: z.string().optional(),
     domicilio_social: z.string().optional(),
     nombre_contacto: z.string().optional(),
     telefono_contacto: z.string().optional(),

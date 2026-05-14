@@ -3,7 +3,6 @@ import api from '../api/api';
 
 interface EmpresaAdmin {
   id: number;
-  nombre_empresa: string;
   razon_social: string;
   cif: string;
   estado: 'Espera' | 'Verificado' | 'Rechazado';
@@ -80,8 +79,7 @@ const Admin = () => {
               {empresas.map((emp) => (
                 <tr key={emp.id}>
                   <td>
-                    <div className="fw-bold">{emp.nombre_empresa}</div>
-                    <small className="text-muted">{emp.razon_social}</small>
+                    <div className="fw-bold">{emp.razon_social}</div>
                   </td>
                   <td><code>{emp.cif}</code></td>
                   <td>{emp.usuario.correo}</td>

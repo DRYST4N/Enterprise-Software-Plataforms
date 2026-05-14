@@ -10,7 +10,6 @@ export interface RegistroDTO {
   //Campos opcionales para la empresa
   razon_social?: string;
   cif?: string;
-  nombre_empresa?: string;
   domicilio_social?: string;
   nombre_contacto?: string;
   telefono_contacto?: string;

@@ -43,7 +43,6 @@ export class UsuarioService{
                     data:{
                         razon_social: data.razon_social!,
                         cif: data.cif!,
-                        nombre_empresa: data.nombre_empresa!,
                         domicilio_social:data.domicilio_social!,
                         nombre_contacto:data.nombre_contacto!,
                         telefono_contacto:data.telefono_contacto!,
@@ -81,7 +80,7 @@ export class UsuarioService{
         return await prisma.cliente.update({where: {usuario_id}, data});
     }
 
-    static async updateEmpresa(usuario_id: number, data: {nombre_empresa?: string; nombre_contacto?: string; telefono_contacto?: string}){
+    static async updateEmpresa(usuario_id: number, data: {nombre_contacto?: string; telefono_contacto?: string}){
         return prisma.empresa.update({ where: { usuario_id }, data});
     }
 }

@@ -15,7 +15,6 @@ const Register = () => {
         telefono: '',
         razon_social: '',
         cif: '',
-        nombre_empresa: '',
         domicilio_social: '',
         nombre_contacto: '',
         telefono_contacto: '',
@@ -92,10 +91,6 @@ const Register = () => {
                 </div>
                 <div className="mb-2">
                 <input name="cif" placeholder="CIF *"
-                    className="form-control" onChange={handleChange} required />
-                </div>
-                <div className="mb-2">
-                <input name="nombre_empresa" placeholder="Nombre empresa *"
                     className="form-control" onChange={handleChange} required />
                 </div>
                 <div className="mb-2">

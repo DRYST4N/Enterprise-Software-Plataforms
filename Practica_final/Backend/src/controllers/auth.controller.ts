@@ -77,8 +77,8 @@ export const actualizarDatos = async (req: Request, res: Response) => {
         const userId = (req as any).user.id;
         const role = (req as any).user.role;
         if (role === 'Empresa') {
-            const { nombre_empresa, nombre_contacto, telefono_contacto } = req.body;
-            const datos = await UsuarioService.updateEmpresa(userId, { nombre_empresa, nombre_contacto, telefono_contacto });
+            const {nombre_contacto, telefono_contacto } = req.body;
+            const datos = await UsuarioService.updateEmpresa(userId, {nombre_contacto, telefono_contacto });
             return res.json(datos);
         } else {
             const { nombre_completo, telefono } = req.body;

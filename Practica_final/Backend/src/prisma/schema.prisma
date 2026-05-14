@@ -34,7 +34,6 @@ model empresa {
   razon_social      String          @db.VarChar(255)
   cif               String          @unique @db.VarChar(20)
   domicilio_social  String?
-  nombre_empresa    String          @db.VarChar(255)
   nombre_contacto   String?         @db.VarChar(255)
   telefono_contacto String?         @db.VarChar(20)
   usuario_id        Int             @unique

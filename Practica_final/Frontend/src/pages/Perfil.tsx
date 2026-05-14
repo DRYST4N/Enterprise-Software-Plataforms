@@ -13,8 +13,7 @@ const Perfil = () => {
   const [editando, setEditando] = useState(false);
   const [editForm, setEditForm] = useState({ 
     nombre_completo: '', 
-    telefono: '', 
-    nombre_empresa: '', 
+    telefono: '',  
     nombre_contacto: '', 
     telefono_contacto: '' 
   });
@@ -39,7 +38,6 @@ const Perfil = () => {
     setEditForm({
       nombre_completo: datos.nombre_completo || '',
       telefono: datos.telefono || '',
-      nombre_empresa: datos.nombre_empresa || '',
       nombre_contacto: datos.nombre_contacto || '',
       telefono_contacto: datos.telefono_contacto || '',
     });
@@ -127,16 +125,7 @@ const Perfil = () => {
             <>
               <h5 className="mb-3">Datos de Empresa</h5>
               
-              <div className="mb-3">
-                <label className="form-label fw-bold">Nombre Comercial</label>
-                {editando ? (
-                  <input name="nombre_empresa" className="form-control" value={editForm.nombre_empresa} onChange={handleInputChange} />
-                ) : (
-                  <p className="form-control-plaintext border-bottom">{datos.nombre_empresa}</p>
-                )}
-              </div>
-
-              <p><strong>Razón Social:</strong> {datos.razon_social}</p>
+              <p className="form-control-plaintext border-bottom">{datos.razon_social}</p>
               <p><strong>CIF:</strong> {datos.cif}</p>
 
               <div className="mb-3">
