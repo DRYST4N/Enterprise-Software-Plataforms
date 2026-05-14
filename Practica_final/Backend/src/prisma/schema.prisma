@@ -16,6 +16,7 @@ model checkout {
   card_last4   String?   @db.VarChar(4)
   usuario      usuario   @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_checkout")
   ticket       ticket[]
+  reembolsado  Boolean  @default(false)
 }
 
 model cliente {

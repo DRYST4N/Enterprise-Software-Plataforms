@@ -1,26 +1,13 @@
 import { useEffect, useState } from 'react';
 import api from '../api/api';
 import QRCode from 'react-qr-code';
-
-interface Ticket {
-    cantidad: number;
-    entrada: { nombre: string };
-}
-
-interface Compra {
-    id: number;
-    fecha_compra: string;
-    precio_total: number;
-    transaction_id: string;
-    ticket: Ticket[];
-}
+import { type Compra } from '../types';
 
 const MisCompras = () => {
     const [compras, setCompras] = useState<Compra[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchCompras = async () => {
+    const fetchCompras = async () => {
         try {
             const res = await api.get('/payments/mis-compras');
             setCompras(res.data);
@@ -29,7 +16,18 @@ const MisCompras = () => {
         } finally {
             setLoading(false);
         }
-        };
+    };
+
+    const solicitarReembolso = async (id: number) => {
+        try {
+            await api.post(`/payments/${id}/reembolso`);
+            fetchCompras(); // recarga la lista
+        } catch (err: any) {
+            alert(err.response?.data?.error || 'Error al procesar el reembolso');
+        }
+    };
+
+    useEffect(() => {
         fetchCompras();
     }, []);
 
@@ -70,9 +68,21 @@ const MisCompras = () => {
                                             <li key={idx} className="list-group-item px-0 d-flex justify-content-between">
                                                 <span>{t.entrada.nombre}</span>
                                                 <strong>x{t.cantidad}</strong>
+                                                
                                             </li>
                                             ))}
                                         </ul>
+                                        {compra.ticket.some(t => t.entrada.festival.cancelado) && !compra.reembolsado && (
+                                                <button
+                                                    className='btn btn-warning btn-sm mt-3'
+                                                    onClick={()=> solicitarReembolso(compra.id)}
+                                                    >
+                                                        Solicitar reembolso
+                                                    </button>
+                                        )}
+                                        {compra.reembolsado && (
+                                            <span className='badge bg-secondary mt-3'>Reembolsado</span>
+                                        )}
                                 </div>
                             </div>
                         </div>

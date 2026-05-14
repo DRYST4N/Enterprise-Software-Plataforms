@@ -81,3 +81,15 @@ export const getMisCompras = async (req: Request, res: Response) => {
         return res.status(500).json({error: error.message})
     }
 }
+
+
+export const procesarReembolso = async (req: Request, res: Response) => {
+    try{
+        const checkoutId = Number(req.params.id);
+        const usuario_id = (req as any).user.id;
+        const resultado = await CheckoutService.reembolsar(checkoutId, usuario_id);
+        return res.json(resultado);
+    }catch(error: any){
+        return res.status(400).json({ error: error.message });
+    }
+};

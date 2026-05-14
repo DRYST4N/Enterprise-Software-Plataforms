@@ -26,3 +26,20 @@ export interface VentaFestival {
     totalEntradas: number;
     totalRecaudado: number;
 }
+
+export interface Ticket {
+    cantidad: number;
+    entrada: { 
+        nombre: string;
+        festival: { cancelado: boolean };
+    };
+}
+
+export interface Compra {
+    id: number;
+    fecha_compra: string;
+    precio_total: number;
+    transaction_id: string;
+    reembolsado: boolean;
+    ticket: Ticket[];
+}

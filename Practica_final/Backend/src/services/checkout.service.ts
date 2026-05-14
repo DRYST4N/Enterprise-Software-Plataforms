@@ -45,10 +45,45 @@ export class CheckoutService {
             include:{
                 ticket:{
                     include:{
-                        entrada: true
+                        entrada: {
+                            include:{ festival: true }
+                        }
                     }
                 }
             }
         })
+    };
+
+    static async reembolsar(checkoutId: number, usuarioId:number){
+        const checkout = await prisma.checkout.findUnique({
+            where: { id: checkoutId },
+            include:{
+                ticket: {include: { entrada: {include:{ festival: true } } } }
+            }
+        });
+
+        if(!checkout) throw new Error('Checkout no encontrado');
+        if(checkout.usuario_id !== usuarioId) throw new Error ('No autorizado');
+        if(checkout.reembolsado) throw new Error('Ya fue rembolsado');
+
+        const tieneFestivalCancelado = checkout.ticket.some(t => t.entrada.festival.cancelado);
+        if(!tieneFestivalCancelado) throw new Error('El festival no está cancelado');
+
+        await fetch('https://webservices.samuelencinas.dev/Payments/PaymentsController_refund', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.API_KEY}`},
+            body: JSON.stringify({
+                status: 'refunded',
+                transactionId: checkout.transaction_id,
+                amount: Number(checkout.precio_total),
+                currency: 'EUR',
+                timestamp: new Date().toISOString()
+            })
+        });
+
+        return await prisma.checkout.update({
+            where: { id: checkoutId },
+            data: { reembolsado: true}
+        });
     }
 }
