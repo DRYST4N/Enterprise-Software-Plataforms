@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/api';
@@ -10,6 +10,8 @@ const Empresa = () => {
   const [festivales, setFestivales] = useState<Festival[]>([]);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [imagenFile, setImagenFile ] = useState<File | null>(null);
+  const imagenInputRef = useRef<HTMLInputElement>(null);
 
   // Form festival
   const [festivalForm, setFestivalForm] = useState({
@@ -107,16 +109,27 @@ const Empresa = () => {
   const crearFestival = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(''); setSuccessMsg('');
+    const formData = new FormData();
+    formData.append('nombre', festivalForm.nombre);
+    formData.append('ubicacion', festivalForm.ubicacion);
+    formData.append('descripcion', festivalForm.descripcion);
+    formData.append('artistas', JSON.stringify(
+      festivalForm.artistas.split(',').map(a => a.trim()).filter(Boolean)
+    ));
+    if(festivalForm.fecha_inicio) formData.append('fecha_inicio', festivalForm.fecha_inicio);
+    if(festivalForm.fecha_fin) formData.append('fecha_fin', festivalForm.fecha_fin);
+    formData.append('aforo', festivalForm.aforo);
+    if(imagenFile) formData.append('imagen', imagenFile);
+
     try {
-      await api.post('/festivales', {
-        ...festivalForm,
-        artistas: festivalForm.artistas.split(',').map(a => a.trim()).filter(Boolean),
-        fecha_inicio: festivalForm.fecha_inicio || undefined,
-        fecha_fin: festivalForm.fecha_fin || undefined,
-        aforo: parseInt(festivalForm.aforo)
+      await api.post('/festivales', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
+
       setSuccessMsg('Festival creado correctamente');
       setFestivalForm({ nombre: '', ubicacion: '', descripcion: '', artistas: '', fecha_inicio: '', fecha_fin: '', aforo: '' });
+      setImagenFile(null);
+      if(imagenInputRef.current) imagenInputRef.current.value = '';
       fetchFestivales();
     } catch (err: any) {
       setError(err.response?.data?.error || 'Error al crear festival');
@@ -191,9 +204,13 @@ const Empresa = () => {
                 <input name="fecha_fin" type="date" className="form-control"
                   value={festivalForm.fecha_fin} onChange={handleFestivalChange} />
               </div>
-              <div className='"mb-3'>
+              <div className='mb-3'>
                 <label className='form-label text-muted small'>Aforo</label>
                 <input name="aforo" type="number" className='form-control' value={festivalForm.aforo} onChange={handleFestivalChange}/>
+              </div>
+              <div className='mb-3'>
+                <label className='form-label text-muted small'>Poster promocional</label>
+                <input ref={imagenInputRef} type="file" accept='image/*' className='form-control mb-2' onChange={(e) => setImagenFile(e.target.files?.[0] || null)} />
               </div>
               <button type="submit" className="btn btn-primary w-100">Crear Festival</button>
             </form>
@@ -245,6 +262,14 @@ const Empresa = () => {
                     ? 'boder border-danger bg-light opacity-75'
                     : ''
                   }`}>
+                    {f.imagen_path && (
+                      <img 
+                          src={`http://localhost:3000${f.imagen_path}`}
+                          className="card-img-top"
+                          style={{ height: '180px', objectFit: 'cover' }}
+                          alt={f.nombre}
+                      />
+                  )}
                   <div className='d-flex justify-content-between align-items-center mb-1'>
                     <h6 className='mb-0'>{f.nombre}</h6>
                     {f.cancelado && <span className='badge bg-danger'>Cancelado</span>}

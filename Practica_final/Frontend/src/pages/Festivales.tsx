@@ -36,13 +36,13 @@ const Festivales = () => {
           <div className="col-md-4" key={festival.id}>
             <div className="card h-100 shadow-sm">
               {festival.imagen_path && (
-                <img
-                  src={festival.imagen_path}
-                  className="card-img-top"
-                  alt={festival.nombre}
-                  style={{ height: '180px', objectFit: 'cover' }}
-                />
-              )}
+                      <img 
+                          src={`http://localhost:3000${festival.imagen_path}`}
+                          className="card-img-top"
+                          style={{ height: '180px', objectFit: 'cover' }}
+                          alt={festival.nombre}
+                      />
+                  )}
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{festival.nombre}</h5>
                 {festival.ubicacion && (

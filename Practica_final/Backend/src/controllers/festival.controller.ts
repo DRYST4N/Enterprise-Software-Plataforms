@@ -5,8 +5,9 @@ import { comprobarFecha, CreateFestivalSchema, UpdateFestivalSchema } from '../s
 export const createFestival = async (req: Request, res: Response) => {
     try{
         const validatedData = CreateFestivalSchema.parse(req.body);
+        const imagen_path = req.file ? `/uploads/festivales/${req.file.filename}` : undefined;
         const empresa_id = (req as any).user.empresa.id;
-        const datos = {...validatedData, empresa_id: empresa_id}
+        const datos = {...validatedData, empresa_id: empresa_id, imagen_path}
         const result = await FestivalService.create(datos);
         res.status(201).json(result);
     }catch( error: any){

@@ -79,6 +79,14 @@ const LandingPage = () => {
                         <div className="col-md-4" key={f.id}>
                             <div className="card h-100 shadow-sm border-0">
                                 <div className="card-body">
+                                    {f.imagen_path && (
+                                        <img 
+                                            src={`http://localhost:3000${f.imagen_path}`}
+                                            className="card-img-top"
+                                            style={{ height: '180px', objectFit: 'cover' }}
+                                            alt={f.nombre}
+                                        />
+                                    )}
                                     <h5 className="card-title fw-bold">{f.nombre}</h5>
                                     {f.ubicacion && <p className="card-text text-muted small">📍 {f.ubicacion}</p>}
                                     {f.fecha_inicio && <p className="card-text text-muted small">🗓️  {new Date(f.fecha_inicio).toLocaleDateString('es-ES')}</p>}
