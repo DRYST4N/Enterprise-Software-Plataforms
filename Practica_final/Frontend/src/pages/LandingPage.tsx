@@ -8,6 +8,13 @@ const LandingPage = () => {
     const { user } = useAuth();
 
     const [ festivales, setFestivales] = useState<Festival[]>([]);
+    const features = [
+        { icon: '🎟️ ', title: 'Entradas al Instante', text: 'Compra tus entradas en menos de un minuto. Sin filas virtuales ni complicaciones.' },
+        { icon: '🔒', title: 'Compra Segura', text: 'Pagos 100% protegidos y entradas digitales con códigos QR anti-fraude.' },
+        { icon: '🎸', title: 'Los Mejores Eventos', text: 'Desde festivales indie hasta los gigantes de la electrónica. Encuentra tu música.' },
+    ];
+
+    const [featIdx, setFeatIdx] = useState(0);
 
     useEffect(() => {
         api.get('/festivales/disponibles')
@@ -38,41 +45,56 @@ const LandingPage = () => {
         </header>
 
       {/* 2. SECCIÓN DE CARACTERÍSTICAS (FEATURES) */}
-        <section className="py-5 bg-light">
-            <div className="container text-center">
-                <div className="row g-4">
-                    <div className="col-md-4">
-                        <div className="p-4 shadow-sm bg-white rounded h-100">
-                            <h3 className="h5 fw-bold text-primary mb-3">🎟️ Entradas al Instante</h3>
-                            <p className="text-muted">
-                                Compra tus entradas en menos de un minuto. Sin filas virtuales interminables ni complicaciones.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="col-md-4">
-                        <div className="p-4 shadow-sm bg-white rounded h-100">
-                            <h3 className="h5 fw-bold text-primary mb-3">🔒 Compra Segura</h3>
-                            <p className="text-muted">
-                                Pagos 100% protegidos y entradas digitales en tu perfil con códigos QR anti-fraude.
-                            </p>
-                        </div>
-                    </div>
-                    <div className="col-md-4">
-                        <div className="p-4 shadow-sm bg-white rounded h-100">
-                            <h3 className="h5 fw-bold text-primary mb-3">🎸 Los Mejores Eventos</h3>
-                            <p className="text-muted">
-                                Desde festivales indie hasta los gigantes de la electrónica. Encuentra la música que te mueve.
-                            </p>
-                        </div>
+        <section className="diagonal-features" style={{
+            padding: '100px 0',
+        }}>
+            <div className="container py-4">
+                <div className="d-flex align-items-center justify-content-center gap-4">
+
+                <button
+                    onClick={() => setFeatIdx((featIdx - 1 + features.length) % features.length)}
+                    style={{ background: 'none', border: '2px solid #212529', borderRadius: '50%', width: '48px', height: '48px', color: '#212529',
+                        fontSize: '1.2rem', cursor: 'pointer', flexShrink: 0 }}>
+                    ←
+                </button>
+
+                <div className="text-center p-5 rounded-4 shadow-lg" style={{
+                    background: 'rgba(30, 30, 50, 0.85)',
+                    backdropFilter: 'blur(10px)',
+                    minWidth: '320px',
+                    maxWidth: '460px',
+                    color: 'white',
+                }}>
+                    <div style={{ fontSize: '3rem' }}>{features[featIdx].icon}</div>
+                    <h3 className="h4 fw-bold mt-3 mb-2">{features[featIdx].title}</h3>
+                    <p style={{ color: 'rgba(255,255,255,0.65)' }}>{features[featIdx].text}</p>
+                    <div className="d-flex justify-content-center gap-2 mt-3">
+                        {features.map((_, i) => (
+                            <button key={i} onClick={() => setFeatIdx(i)} style={{
+                                width: '10px', height: '10px',
+                                borderRadius: '50%', border: 'none',
+                                background: i === featIdx ? '#fff' : 'rgba(255,255,255,0.3)',
+                                cursor: 'pointer', padding: 0,
+                            }} />
+                        ))}
                     </div>
                 </div>
+
+                <button
+                    onClick={() => setFeatIdx((featIdx + 1) % features.length)}
+                    style={{ background: 'none', border: '2px solid #212529', borderRadius: '50%', width: '48px', height: '48px', color:
+                        '#212529', fontSize: '1.2rem', cursor: 'pointer', flexShrink: 0 }}>
+                    →
+                </button>
+
             </div>
-        </section>
+        </div>
+    </section>
 
       {/* 3. FESTIVALES DESTACADOS (PREVIEW) */}
-        <section className="py-5">
+        <section className="py-5 diagonal-festivals">
             <div className="container">
-                <h2 className="text-center fw-bold mb-5">Festivales Destacados</h2>
+                <h2 className="text-center fw-bold mb-5 text-light">Festivales Destacados</h2>
                 <div className="row g-4">
             
                     {festivales.map(f => (
