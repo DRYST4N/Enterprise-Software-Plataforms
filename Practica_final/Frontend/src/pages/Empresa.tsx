@@ -154,8 +154,6 @@ const Empresa = () => {
     <div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>🏢 Panel de Empresa</h2>
-        <button className="btn btn-outline-danger" onClick={handleLogout}>Cerrar sesión</button>
-        <button className='btn' onClick={()=> navigate('/me')}>Perfil</button>
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}
@@ -241,8 +239,16 @@ const Empresa = () => {
           <div className="row g-3 mt-1">
             {festivales.map(f => (
               <div className="col-md-6" key={f.id}> {/* He cambiado a col-md-6 para que el formulario tenga espacio */}
-                <div className="card shadow-sm p-3">
-                  <h6>{f.nombre}</h6>
+                <div 
+                  className={`card shadow-sm p-3 ${
+                    f.cancelado === true
+                    ? 'boder border-danger bg-light opacity-75'
+                    : ''
+                  }`}>
+                  <div className='d-flex justify-content-between align-items-center mb-1'>
+                    <h6 className='mb-0'>{f.nombre}</h6>
+                    {f.cancelado && <span className='badge bg-danger'>Cancelado</span>}
+                  </div>
                   {f.ubicacion && <p className="text-muted mb-1 small">📍 {f.ubicacion}</p>}
                   {f.fecha_inicio && (
                     <p className="mb-0 small">
@@ -254,6 +260,7 @@ const Empresa = () => {
                     <button
                       className="btn btn-sm btn-danger me-2"
                       onClick={() => cancelarFestival(f.id)}
+                      disabled = {f.cancelado}
                     >
                       Cancelar festival
                     </button>
@@ -262,6 +269,7 @@ const Empresa = () => {
                     <button
                       className="btn btn-sm btn-warning"
                       onClick={() => abrirEdicion(f)}
+                      disabled={f.cancelado}
                     >
                       Editar
                     </button>

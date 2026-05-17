@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
 import type { Festival } from '../types';
 
 const Festivales = () => {
-    const { logout } = useAuth();
     const navigate = useNavigate();
     const [festivales, setFestivales] = useState<Festival[]>([]);
     const [error, setError] = useState('');
@@ -21,19 +19,10 @@ const Festivales = () => {
         };
         fetchFestivales();
     }, []);
-    
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    };
 
     return(<div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>🎪 Festivales disponibles</h2>
-        <button className="btn btn-outline-danger" onClick={handleLogout}>
-          Cerrar sesión
-        </button>
-        <button className="btn" onClick={() => navigate('/me')}>Perfil</button>
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}

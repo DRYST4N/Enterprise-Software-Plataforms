@@ -1,6 +1,7 @@
 export interface Festival {
     id: number;
     nombre: string;
+    cancelado?: boolean;
     ubicacion?: string;
     descripcion?: string;
     artistas?: string[];

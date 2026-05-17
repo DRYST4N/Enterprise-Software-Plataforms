@@ -101,7 +101,61 @@ async function main() {
         }
     });
 
+    //Empresa pendiente
+    await prisma.usuario.create({
+        data: {
+            correo: 'pendiente@fest.io',
+            pass: await hash('pendiente123'),
+            role: 'Empresa',
+            empresa: {
+                create: {
+                    razon_social: 'Eventos Luna S.L.',
+                    cif: 'B87654321',
+                    domicilio_social: 'Calle Luna 5',
+                    nombre_contacto: 'Luis Martínez',
+                    telefono_contacto: '600000003',
+                }
+            }
+        }
+    });
+
+    await prisma.usuario.create({
+        data: {
+            correo: 'rechazada@fest.io',
+            pass: await hash('rechazada123'),
+            role: 'Empresa',
+            empresa: {
+                create: {
+                    razon_social: 'Fraudes Corp S.L.',
+                    cif: 'B11111111',
+                    domicilio_social: 'Calle Falsa 123',
+                    nombre_contacto: 'Pedro Ruiz',
+                    telefono_contacto: '600000004',
+                    estado: 'Rechazado'
+                }
+            }
+        }
+    });
+
+    //Cliente a borrar
+    await prisma.usuario.create({
+        data: {
+            correo: 'borrar@fest.io',
+            pass: await hash('borrar123'),
+            role: 'Cliente',
+            cliente: {
+                create: {
+                    nombre_completo: 'Cliente Borrable',
+                    dni: '99999999Z',
+                    fecha_nacimiento: new Date('2000-01-01'),
+                    telefono: '600000005'
+                }
+            }
+        }
+    });
     console.log('Seed completado');
+
+
 }
 
 main()
