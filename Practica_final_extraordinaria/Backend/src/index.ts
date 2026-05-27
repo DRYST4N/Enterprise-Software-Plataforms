@@ -1,8 +1,9 @@
 import express from "express";
 import dotenv from 'dotenv';
-import authRouter from './routes/auth.routes.js';
 import corsMiddleware from "./config/cors.js";
 import passport from "passport";
+import authRouter from './routes/auth.routes.js';
+import adminRouter from './routes/admin.route.js';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(passport.initialize());
 
 app.use('/api/auth', authRouter);
+app.use('/api/admin', adminRouter);
 
 
 app.get('/health', (req, res) => {
