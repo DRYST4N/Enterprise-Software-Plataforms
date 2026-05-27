@@ -6,7 +6,7 @@ import { ca } from 'zod/locales';
 
 const opts: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_Secret || 'super_secret_key_castilla_rooms'
+    secretOrKey: process.env.JWT_Secret || 'JWT_SECRET="clave_secreta_para_firmar_tus_propios_tokens"'
 };
 
 passport.use(

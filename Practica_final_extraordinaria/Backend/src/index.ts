@@ -5,6 +5,7 @@ import passport from "passport";
 import authRouter from './routes/auth.routes.js';
 import adminRouter from './routes/admin.route.js';
 import ApartamentoRouter from './routes/apartamentos.route.js';
+import ReservaRouter from './routes/reserva.route.js';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(passport.initialize());
 app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/apartamento', ApartamentoRouter);
+app.use('/api/reservas', ReservaRouter);
 
 
 app.get('/health', (req, res) => {
