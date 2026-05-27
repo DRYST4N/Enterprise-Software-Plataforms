@@ -4,6 +4,7 @@ import corsMiddleware from "./config/cors.js";
 import passport from "passport";
 import authRouter from './routes/auth.routes.js';
 import adminRouter from './routes/admin.route.js';
+import ApartamentoRouter from './routes/apartamentos.route.js';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(passport.initialize());
 
 app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/apartamento', ApartamentoRouter);
 
 
 app.get('/health', (req, res) => {
