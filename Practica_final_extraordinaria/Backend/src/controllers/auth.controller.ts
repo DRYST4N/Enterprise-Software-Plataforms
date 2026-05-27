@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { RegistrarClienteSchema, RegistrarAgenciaSchema } from "../dtos/authDto.js";
-import { registrarClientesService, registrarAgenciaService, loginUserService } from "../services/authService.js";
+import { registrarClientesService, registrarAgenciaService, loginUserService } from "../services/auth.service.js";
 
 export const registrarCliente = async (req: Request, res: Response) => {
     const validation = RegistrarClienteSchema.safeParse(req.body);

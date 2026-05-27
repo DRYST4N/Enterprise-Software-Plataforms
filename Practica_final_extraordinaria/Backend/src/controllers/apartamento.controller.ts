@@ -1,6 +1,7 @@
 import type{ Request, Response } from "express";
 import { CreateApartamentoSchema } from "../dtos/apartamentos.dto.js";
-import { createApartamentoService, getApartamentosByAgenciaService, updateApartamentoService,deleteApartamentoSevice } from "../services/apartamento.service.js";
+import { createApartamentoService, getApartamentosByAgenciaService, updateApartamentoService,deleteApartamentoSevice, getInformeVentasAnualService } from "../services/apartamento.service.js";
+
 
 export const createApartamento = async(req: Request, res: Response) => {
     const validation = CreateApartamentoSchema.safeParse(req.body);
@@ -58,5 +59,24 @@ export const deleteApartamento = async(req: Request, res:Response) => {
     }catch(error){
         const msg = error instanceof Error ? error.message : 'Error al dar de baja el apartamento.';
         return res.status(400).json({ error: msg});
+    }
+};
+
+
+export const getInformeVentas = async(req: Request, res: Response) => {
+    const anoParam = req.query.ano as string;
+
+    if(!anoParam || isNaN(parseInt(anoParam, 10))){
+        return res.status(400).json({ error: 'Es obligatorio proporcionar un año válido en los parametros de consulta.'});
+    }
+
+    try{
+        const user = req.user as any;
+        const ano = parseInt(anoParam, 10);
+
+        const informe = await getInformeVentasAnualService(user.agencia.id, ano);
+        return res.status(200).json(informe);
+    }catch(error){
+        return res.status(500).json({ error: 'Error interno del servidor al procesar el informe de ventas.'})
     }
 };
