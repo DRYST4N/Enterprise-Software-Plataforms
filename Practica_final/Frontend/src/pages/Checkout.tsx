@@ -85,6 +85,7 @@ const Checkout = () => {
 
             // Guardar el transaction_id según la estructura de tu respuesta
             setTransactionId(res.data.data.checkout.transaction_id);
+            setTimeout(()=> navigate('/mis-compras'), 3000);
         } catch (err: any) {
             setError(err.response?.data?.message || 'Error al procesar el pago');
         } finally {

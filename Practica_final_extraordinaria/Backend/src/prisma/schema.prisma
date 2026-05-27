@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  AGENCIA
+  CLIENTE
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String // Se guardará encriptada con bcrypt
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones 1:1 inversas
+  cliente   Cliente?
+  agencia   Agencia?
+}
+
+model Cliente {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  nombreApellidos String
+  dni            String   @unique
+  fechaNacimiento DateTime
+  telefono       String
+
+  // Relaciones
+  reservas       Reserva[]
+}
+
+model Agencia {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  razonSocial     String
+  cif             String   @unique
+  domicilioSocial String
+  nombreContacto  String
+  telefono        String
+  verificada      Boolean  @default(false) // Por defecto falsas hasta que el ADMIN actúe
+  bloqueada       Boolean  @default(false)
+
+  // Relaciones
+  apartamentos    Apartamento[]
+}
+
+model Apartamento {
+  id          String   @id @default(uuid())
+  agenciaId   String
+  agencia     Agencia  @relation(fields: [agenciaId], references: [id], onDelete: Cascade)
+  
+  nombre      String
+  descripcion String
+  municipio   String
+  provincia   String   // Validar en Backend que pertenezca a CyL
+  precioNoche Float
+  estrellas   Float    @default(0) // Controlado en exclusiva por el ADMIN (permite decimales)
+  activo      Boolean  @default(true) // Para la lógica de "Dar de baja" sin borrar registros históricos
+
+  // Relaciones
+  reservas    Reserva[]
+}
+
+model Reserva {
+  id            String   @id @default(uuid())
+  clienteId     String
+  cliente       Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  apartamentoId String
+  apartamento   Apartamento @relation(fields: [apartamentoId], references: [id], onDelete: Cascade)
+  
+  checkIn       DateTime
+  checkOut      DateTime
+  totalNoches   Int
+  precioTotal   Float
+  createdAt     DateTime @default(now())
+
+  transactionId String   @unique
+  statusPago    String   // "approved", "declined", "refunded"
+  cardLast4     String   
+  cardHolder    String
+}
