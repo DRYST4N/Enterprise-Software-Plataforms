@@ -1,15 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import type { Agencia } from '../types';
 
-interface Agencia {
-  id: string;
-  razonSocial: string;
-  cif: string;
-  nombreContacto: string;
-  verificada: boolean;
-  bloqueada: boolean;
-}
 
 export default function AdminDashboard() {
   const [agencias, setAgencias] = useState<Agencia[]>([]);

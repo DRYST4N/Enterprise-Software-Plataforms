@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import api from '../services/api';
+import type { DatosInforme } from '../types';
 
-interface DatosInforme {
-  anio: number;
-  totalIngresos: number;
-  totalReservas: number;
-}
 
 export default function AgenciaInforme() {
   // Inicializamos el año con el año actual en curso (2026)

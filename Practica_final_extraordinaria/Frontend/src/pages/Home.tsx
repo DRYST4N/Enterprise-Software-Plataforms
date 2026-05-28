@@ -1,117 +1,97 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-// Listado oficial de provincias para el filtro (Requisito del enunciado)
-const PROVINCIAS_CYL = [
-    'Todas', 'Ávila', 'Burgos', 'León', 'Palencia', 'Salamanca', 
-    'Segovia', 'Soria', 'Valladolid', 'Zamora'
-];
-
-    // Datos ficticios iniciales para pintar la pantalla de inmediato
-const APARTAMENTOS_MOCK = [
-    { id: '1', nombre: 'Ático Plaza Mayor', municipio: 'Valladolid', provincia: 'Valladolid', precioNoche: 85, estrellas: 4, descripcion: 'Precioso ático en el corazón de la ciudad.' },
-    { id: '2', nombre: 'Casa Rural Silos', municipio: 'Santo Domingo de Silos', provincia: 'Burgos', precioNoche: 120, estrellas: 5, descripcion: 'Desconexión total con jardín y barbacoa.' },
-    { id: '3', nombre: 'Apartamento Catedral', municipio: 'León', provincia: 'León', precioNoche: 65, estrellas: 3, descripcion: 'Vistas espectaculares a la catedral.' },
-];
+import api from '../services/api';
+import type { Apartamento } from '../types';
 
 export default function Home() {
-    const [provinciaSeleccionada, setProvinciaSeleccionada] = useState('Todas');
-    const navigate = useNavigate();
+  const [apartamentos, setApartamentos] = useState<Apartamento[]>([]);
+  const [provincia, setProvincia] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-    // Filtrado en tiempo real en el cliente
-    const apartamentosFiltrados = provinciaSeleccionada === 'Todas'
-        ? APARTAMENTOS_MOCK
-        : APARTAMENTOS_MOCK.filter(apto => apto.provincia === provinciaSeleccionada);
+  // Cargamos los apartamentos reales al arrancar la pantalla
+  useEffect(() => {
+    fetchApartamentos();
+  }, [provincia]); // Se vuelve a ejecutar si el usuario cambia de provincia
 
-    const handleReservar = (aptoId: string) => {
-        const token = localStorage.getItem('castilla_rooms_token');
-        const role = localStorage.getItem('user_role');
+  const fetchApartamentos = async () => {
+    try {
+      setLoading(true);
+      // Construimos la URL. Si hay provincia, filtramos mediante Query Params
+      const url = provincia ? `/apartamentos/publico?provincia=${provincia}` : '/apartamentos/publico';
+      const response = await api.get(url);
+      setApartamentos(response.data);
+    } catch (err) {
+      console.error('Error al cargar catálogo público:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        if (!token) {
-        alert('Debes iniciar sesión para realizar una reserva.');
-        navigate('/login');
-        return;
-        }
-
-        if (role !== 'CLIENTE') {
-        alert('Solo los usuarios con cuenta de Cliente pueden reservar alojamientos.');
-        return;
-        }
-
-        // Si es cliente real y está logueado, pasamos a la pasarela de reservas
-        navigate(`/reserva/${aptoId}`);
-    };
-
-return (
-    <div className="container py-2">
-        <div className="row my-4 align-items-center">
-            <div className="col-md-8">
-                <h2 className="fw-bold text-dark m-0">Explore alojamientos en Castilla y León</h2>
-                <p className="text-muted mb-0">Encuentra estancias verificadas gestionadas por agencias locales.</p>
-            </div>
-            
-            {/* Filtro por Provincia Obligatorio */}
-            <div className="col-md-4 mt-3 mt-md-0">
-                <label className="form-label fw-semibold text-secondary">Filtrar por provincia:</label>
-                <select 
-                    className="form-select shadow-sm"
-                    value={provinciaSeleccionada}
-                    onChange={(e) => setProvinciaSeleccionada(e.target.value)}
-                >
-                    {PROVINCIAS_CYL.map(prov => <option key={prov} value={prov}>{prov}</option>)}
-                </select>
-            </div>
+  return (
+    <div className="container py-4">
+      {/* SECCIÓN BUSCADOR / FILTRO */}
+      <div className="card p-4 shadow-sm border-0 mb-4 bg-white rounded-3">
+        <h3 className="fw-bold mb-3">📍 Descubre tu próximo destino en CyL</h3>
+        <div className="row g-3">
+          <div className="col-md-8">
+            <select 
+              className="form-select form-select-lg"
+              value={provincia}
+              onChange={(e) => setProvincia(e.target.value)}
+            >
+              <option value="">Todas las provincias de Castilla y León</option>
+              {['Ávila', 'Burgos', 'León', 'Palencia', 'Salamanca', 'Segovia', 'Soria', 'Valladolid', 'Zamora'].map(p => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          </div>
+          <div className="col-md-4">
+            <button className="btn btn-lg btn-primary w-100 fw-bold shadow-sm" onClick={fetchApartamentos}>
+              🔄 Actualizar Catálogo
+            </button>
+          </div>
         </div>
+      </div>
 
-        {/* Grid de Apartamentos */}
-        <div className="row">
-            {apartamentosFiltrados.length === 0 ? (
-                <div className="col-12 text-center my-5">
-                    <p className="text-muted fs-5">No hay apartamentos disponibles en la provincia de {provinciaSeleccionada} en este momento.</p>
+      {/* RENDERIZADO DE APARTAMENTOS */}
+      {loading ? (
+        <div className="text-center my-5"><div className="spinner-border text-primary"></div></div>
+      ) : apartamentos.length === 0 ? (
+        <div className="alert alert-info text-center shadow-sm">
+          No hay apartamentos disponibles con los criterios seleccionados en este momento.
+        </div>
+      ) : (
+        <div className="row g-4">
+          {apartamentos.map(apto => (
+            <div className="col-md-4" key={apto.id}>
+              <div className="card h-100 border-0 shadow-sm rounded-3 overflow-hidden custom-card">
+                <div className="bg-secondary text-white text-center py-5 position-relative" style={{ minHeight: '160px' }}>
+                  <span className="position-absolute top-0 start-0 m-2 badge bg-dark opacity-75">🏢 {apto.provincia}</span>
+                  <span className="fs-1">🏠</span>
                 </div>
-                ) : (
-                apartamentosFiltrados.map((apto) => (
-                    <div className="col-md-4 mb-4" key={apto.id}>
-                        <div className="card h-100 shadow-sm border-0 position-relative">
-                    
-                        {/* Badge de Provincia */}
-                            <span className="position-absolute top-0 end-0 bg-primary text-white px-3 py-1 m-3 rounded-pill fw-bold small shadow-sm">
-                                {apto.provincia}
-                            </span>
-
-                            <div className="card-body d-flex flex-column pt-5">
-                                <h5 className="card-title fw-bold text-dark mb-1">{apto.nombre}</h5>
-                                <p className="text-muted small mb-2">📍 {apto.municipio}</p>
-                    
-                                {/* Estrellas otorgadas por el Admin */}
-                                <div className="mb-3 text-warning">
-                                    {'⭐'.repeat(apto.estrellas)}
-                                    <span className="text-muted small ms-1">({apto.estrellas} estrellas)</span>
-                                </div>
-
-                                <p className="card-text text-secondary flex-grow-1 fs-6">{apto.descripcion}</p>
-                    
-                                <hr className="text-muted my-3" />
-
-                                <div className="d-flex justify-content-between align-items-center mt-auto">
-                                    <div>
-                                        <span className="fs-4 fw-extrabold text-success">{apto.precioNoche}€</span>
-                                        <span className="text-muted small"> / noche</span>
-                                    </div>
-                                    <button 
-                                        onClick={() => handleReservar(apto.id)}
-                                        className="btn btn-outline-primary fw-bold px-3 shadow-sm"
-                                    >
-                                        Reservar
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div>
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title fw-bold text-dark">{apto.nombre}</h5>
+                  <p className="card-text text-muted small text-truncate-2 mb-2">{apto.descripcion}</p>
+                  <p className="mb-2 text-warning fw-bold">{'⭐'.repeat(apto.estrellas) || 'Sin clasificar'}</p>
+                  <div className="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
+                    <div>
+                      <span className="fs-4 fw-bold text-success">{apto.precioNoche}€</span>
+                      <span className="text-muted small"> / noche</span>
                     </div>
-                ))
-            )}
+                    <button 
+                      onClick={() => navigate(`/reserva/${apto.id}`)}
+                      className="btn btn-sm btn-outline-primary fw-bold px-3 rounded-pill"
+                    >
+                      Reservar -{`>`}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+          ))}
         </div>
-    );
+      )}
+    </div>
+  );
 }

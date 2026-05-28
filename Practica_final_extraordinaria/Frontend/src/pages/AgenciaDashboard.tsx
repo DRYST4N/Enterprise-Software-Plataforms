@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import type { Apartamento } from '../types';
 
 // Requisito del enunciado: Control estricto de provincias de CyL
 const PROVINCIAS_CYL = [
@@ -8,14 +9,6 @@ const PROVINCIAS_CYL = [
   'Segovia', 'Soria', 'Valladolid', 'Zamora'
 ];
 
-interface Apartamento {
-  id: string;
-  nombre: string;
-  municipio: string;
-  provincia: string;
-  precioNoche: number;
-  estrellas: number;
-}
 
 export default function AgenciaDashboard() {
   const [apartamentos, setApartamentos] = useState<Apartamento[]>([]);

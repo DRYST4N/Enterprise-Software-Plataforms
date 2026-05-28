@@ -1,15 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import  type {Apartamento}  from '../types';
 
-interface Apartamento {
-  id: string;
-  nombre: string;
-  municipio: string;
-  provincia: string;
-  precioNoche: number;
-  estrellas: number;
-}
 
 export default function AdminAlojamientos() {
   const [apartamentos, setApartamentos] = useState<Apartamento[]>([]);
