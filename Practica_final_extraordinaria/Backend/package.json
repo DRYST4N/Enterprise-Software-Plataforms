@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "tsx watch src/index.ts",
     "db:migrate": "prisma migrate dev --schema=./src/prisma/schema.prisma",
     "db:generate": "prisma generate --schema=./src/prisma/schema.prisma",
-    "db:studio": "prisma studio --schema=./src/prisma/schema.prisma",
+    "db:studio": "prisma studio --config=./src/prisma/schema.prisma",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

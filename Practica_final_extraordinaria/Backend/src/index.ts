@@ -1,7 +1,8 @@
 import express from "express";
 import dotenv from 'dotenv';
 import corsMiddleware from "./config/cors.js";
-import passport from "passport";
+import './config/passport.js';
+import passport from "./config/passport.js";
 import authRouter from './routes/auth.routes.js';
 import adminRouter from './routes/admin.route.js';
 import ApartamentoRouter from './routes/apartamentos.route.js';

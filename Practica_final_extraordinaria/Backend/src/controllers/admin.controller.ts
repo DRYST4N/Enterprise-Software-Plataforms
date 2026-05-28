@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { UpdateEstrellasSchema } from '../dtos/admin.dto.js';
-import { getAgenciasService, toggleAgenciaStatusService, updateApartamentoEstrellasService } from '../services/admin.service.js';
+import { getAgenciasService, toggleAgenciaStatusService, updateApartamentoEstrellasService, getAllApartamentosService } from '../services/admin.service.js';
 
 export const getAllAgencias = async (req: Request, res: Response) => {
     try{
@@ -14,6 +14,8 @@ export const getAllAgencias = async (req: Request, res: Response) => {
 export const updateAgenciaStatus = async(req: Request, res: Response) => {
     const id  = req.params.id as string;
     const { verificada, bloqueada } = req.body;
+
+    console.log(' [Body Recibido en el controlador]:', req.body);
 
     try{
         const agenciaActualizada = await toggleAgenciaStatusService(id, {verificada, bloqueada});
@@ -31,10 +33,12 @@ export const updateEstrellas = async (req: Request, res: Response) => {
 
     if(!validation.data){
         const errores = validation.error.issues.map((err) => err.message);
+        console.error(errores);
         return res.status(400).json({ errors: errores});
     };
 
     try{
+        console.log(`[Admin Controller] Petición para calificar apartamento ${validation.data.apartamentoId} con ${validation.data.estrellas}`);
         const aptoActualizado = await updateApartamentoEstrellasService(
             validation.data.apartamentoId,
             validation.data.estrellas
@@ -48,3 +52,19 @@ export const updateEstrellas = async (req: Request, res: Response) => {
     }
 };
 
+
+export const getAllApartamentos = async (_req: Request, res: Response) => {
+    try{
+        console.log('[Admin Controller] Petición recibida para listar apartamentos globales. ');
+
+        const apartamentos = await getAllApartamentosService();
+
+        return res.status(200).json(apartamentos);
+    }catch(error: any){
+        console.error("[Admin Controller] Error al recuperar alojamientos:", error.message);
+
+        return res.status(500).json({
+            error: 'Error interno del servidor al procesar el catálogo global.'
+        });
+    }
+};

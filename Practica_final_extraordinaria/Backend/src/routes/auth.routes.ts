@@ -5,8 +5,8 @@ import { registrarAgencia, registrarCliente, login } from "../controllers/auth.c
 const router =  Router();
 
 
-router.post('/registrar/cliente', registrarCliente);
-router.post('/registrar/agencia', registrarAgencia);
+router.post('/register/cliente', registrarCliente);
+router.post('/register/agencia', registrarAgencia);
 router.post('/login', login);
 
 export default router;

@@ -1,12 +1,11 @@
 import { Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
 import type { StrategyOptions } from 'passport-jwt';
 import passport from 'passport';
-import prisma from '../config/db.js';
-import { ca } from 'zod/locales';
+import {prisma} from './db.js';
 
 const opts: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_Secret || 'JWT_SECRET="clave_secreta_para_firmar_tus_propios_tokens"'
+    secretOrKey: process.env.JWT_SECRET || "clave_secreta_para_firmar_tus_propios_tokens"
 };
 
 passport.use(
