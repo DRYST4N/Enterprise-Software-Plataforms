@@ -43,7 +43,7 @@ import passport from './config/passport.js';
 import corsMiddleware from "./config/cors.js";
 
 
-const startServer = async () => {
+const startPublicServer = async () => {
 
     const app = express();
 
@@ -64,4 +64,4 @@ const startServer = async () => {
 };
 
 
-startServer();
+startPublicServer();
