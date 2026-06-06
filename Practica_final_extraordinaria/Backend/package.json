@@ -10,9 +10,11 @@
 
     "start:public": "node dist/api.js",
     "start:admin": "node dist/Admin-server.js",
+    "start:payment": "node dist/Payments-api.js",
     "dev:public": "tsx watch api.js",
     "dev:admin": "tsx watch Admin-server.js",
-    "dev": "concurrently \"npm run dev:public\" \"npm run dev:admin\"",
+    "dev:payment": "tsc watch Payments-api.js",
+    "dev": "concurrently \"npm run dev:public\" \"npm run dev:admin\" \"npm run dev:payment\"",
 
     "test": "echo \"Error: no test specified\" && exit 1"
   },
