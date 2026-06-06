@@ -3,6 +3,7 @@ export interface IBookingRepository{
     findApartamentoActivo(id: string):Promise<any | null>;
     comprobarConflictoFechas(apartamentoId: string, checkIn: Date, checkOut: Date): Promise<boolean>;
     createReserva(data: any): Promise<any>;
+    findReservasPorCliente(clienteId: string): Promise<any[]>;
 }
 
 

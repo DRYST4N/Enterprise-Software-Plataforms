@@ -8,6 +8,7 @@ import AdminDashboard from './pages/AdminDashboard.tsx';
 import AgenciaDashboard from './pages/AgenciaDashboard.tsx';
 import AgenciaInforme from './pages/AgenciaInforme.tsx';
 import AdminAlojamientos from './pages/AdminAlojamientos.tsx';
+import MisReservas from './pages/Mis-reservas.tsx';
 
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/reserva/:id" element={<Reserva />} />
+            <Route path="/mis-reservas" element={<MisReservas />} />
             
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/alojamientos" element={<AdminAlojamientos />} />

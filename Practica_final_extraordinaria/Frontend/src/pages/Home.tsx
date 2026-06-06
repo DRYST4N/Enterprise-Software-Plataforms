@@ -1,6 +1,7 @@
+// src/pages/Home.tsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { publicAPI } from '../services/api';
 import type { Apartamento } from '../types';
 
 export default function Home() {
@@ -17,9 +18,10 @@ export default function Home() {
   const fetchApartamentos = async () => {
     try {
       setLoading(true);
-      // Construimos la URL. Si hay provincia, filtramos mediante Query Params
-      const url = provincia ? `/apartamentos/publico?provincia=${provincia}` : '/apartamentos/publico';
-      const response = await api.get(url);
+      // 🔥 CORREGIDO: Ruta limpia adaptada al enrutador modular del backend (/api/apartamentos)
+      // Si hay provincia, filtramos mediante Query Params (?provincia=...)
+      const url = provincia ? `/apartments?provincia=${provincia}` : '/apartments';
+      const response = await publicAPI.get(url);
       setApartamentos(response.data);
     } catch (err) {
       console.error('Error al cargar catálogo público:', err);
@@ -73,7 +75,9 @@ export default function Home() {
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title fw-bold text-dark">{apto.nombre}</h5>
                   <p className="card-text text-muted small text-truncate-2 mb-2">{apto.descripcion}</p>
-                  <p className="mb-2 text-warning fw-bold">{'⭐'.repeat(apto.estrellas) || 'Sin clasificar'}</p>
+                  <p className="mb-2 text-warning fw-bold">
+                    {apto.estrellas > 0 ? '⭐'.repeat(apto.estrellas) : '0 estrellas (Sin clasificar)'}
+                  </p>
                   <div className="mt-auto d-flex justify-content-between align-items-center pt-2 border-top">
                     <div>
                       <span className="fs-4 fw-bold text-success">{apto.precioNoche}€</span>

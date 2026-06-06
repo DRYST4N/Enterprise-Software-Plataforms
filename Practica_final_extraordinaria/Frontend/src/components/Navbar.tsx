@@ -30,6 +30,12 @@ export default function Navbar() {
               <Link className="nav-link text-white-50" to="/">Inicio</Link>
             </li>
 
+            {token && role === 'CLIENTE' && (
+              <li className="nav-item">
+                <Link className="nav-link text-primary fw-semibold" to="/mis-reservas">📅 Mis Reservas (QR)</Link>
+              </li>
+            )}
+
             {token && role === 'AGENCIA' && (
               <>
                 <li className="nav-item">

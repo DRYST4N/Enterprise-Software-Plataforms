@@ -1,7 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
 import { CreateReservaSchema } from "../reservas.dto.js";
-import { JsonNull } from "@prisma/client/runtime/client";
-import { transformAuthInfo } from "passport";
 
 export const CreateReservaController = (dependencies: any) => {
     const { usecase: { createReserva } } = dependencies;

@@ -1,14 +1,13 @@
+// src/pages/AgenciaDashboard.tsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { publicAPI } from '../services/api'; 
 import type { Apartamento } from '../types';
 
-// Requisito del enunciado: Control estricto de provincias de CyL
 const PROVINCIAS_CYL = [
   'Ávila', 'Burgos', 'León', 'Palencia', 'Salamanca', 
   'Segovia', 'Soria', 'Valladolid', 'Zamora'
 ];
-
 
 export default function AgenciaDashboard() {
   const [apartamentos, setApartamentos] = useState<Apartamento[]>([]);
@@ -16,34 +15,33 @@ export default function AgenciaDashboard() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Estados del formulario para nuevo apartamento
   const [nombre, setNombre] = useState('');
   const [municipio, setMunicipio] = useState('');
-  const [provincia, setProvincia] = useState(PROVINCIAS_CYL[0]); // Por defecto Ávila
+  const [provincia, setProvincia] = useState(PROVINCIAS_CYL[0]); 
   const [precioNoche, setPrecioNoche] = useState('');
   const [descripcion, setDescripcion] = useState('');
 
-  // 1. Protección de Rol en Cliente
+  
   useEffect(() => {
     const role = localStorage.getItem('user_role');
     if (role !== 'AGENCIA') {
       alert('Acceso denegado. Zona exclusiva para Agencias Verificadas.');
       navigate('/');
+      return;
     } 
 
     const verificarEstadoReal = async () => {
-      try{
+      try {
         setLoading(true);
-
-        const response = await api.get('/apartamento/mis-apartamentos');
+        const response = await publicAPI.get('/apartments/mis-apartment');
         setApartamentos(response.data);
-      }catch(err: any){
-        if (err.response?.status === 403){
-          setError('Tu agencia esta registrada, pero aún requiere la aprobacion del Administrador.');
-        }else{
-          setError('No se pudieron recuperar tus alojamientos en este momentos.');
+      } catch (err: any) {
+        if (err.response?.status === 403) {
+          setError('Tu agencia está registrada, pero aún requiere la aprobación o verificación del Administrador.');
+        } else {
+          setError('No se pudieron recuperar tus alojamientos en este momento.');
         }
-      }finally{
+      } finally {
         setLoading(false);
       }
     };
@@ -51,11 +49,11 @@ export default function AgenciaDashboard() {
     verificarEstadoReal();
   }, [navigate]);
 
-  // 2. Recuperar alojamientos de la propia agencia
+  
   const cargarMisApartamentos = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/apartamento/mis-apartamentos');
+      const response = await publicAPI.get('/apartments/mis-apartment');
       setApartamentos(response.data);
     } catch (err: any) {
       setError('No se pudieron recuperar tus alojamientos. Revisa que tu agencia esté aprobada por el Admin.');
@@ -64,7 +62,7 @@ export default function AgenciaDashboard() {
     }
   };
 
-  // 3. Enviar el alta del nuevo apartamento
+  
   const handleCrearApartamento = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -78,16 +76,16 @@ export default function AgenciaDashboard() {
     };
 
     try {
-      await api.post('/apartamento', payload);
+      await publicAPI.post('/apartamentos', payload);
       alert('¡Apartamento registrado con éxito en Castilla y León!');
       
-      // Limpiamos el formulario
+      
       setNombre('');
       setMunicipio('');
       setPrecioNoche('');
       setDescripcion('');
       
-      // Recargamos la lista
+      
       cargarMisApartamentos();
     } catch (err: any) {
       alert(err.response?.data?.error || 'Error al guardar el apartamento.');

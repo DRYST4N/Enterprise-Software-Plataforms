@@ -52,6 +52,7 @@ export const init = async () => {
         updateMisDatos: new AuthUsesCases.UpdateMisDatosUseCase(authRepository),
 
         createReserva: new BookingUseCases.CreateBookingUseCase(bookingsRepository, paymentService),
+        getMisReservas: new BookingUseCases.GetMisReservasUseCase(bookingsRepository),
 
         verifyAgency: new AdminUseCase.VerifyAgencyUseCase(adminRepository),
         getAllAgencies:new AdminUseCase.GetAllAparments(adminRepository),

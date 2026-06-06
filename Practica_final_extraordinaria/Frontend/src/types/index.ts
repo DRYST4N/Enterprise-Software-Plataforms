@@ -36,3 +36,8 @@ export interface DatosInforme{
     totalIngresos: number;
     totalReservas: number;
 }
+
+export interface SystemStatus{
+    apiPublica: { name: string; status: 'ONLINE' | 'OFFLINE'; message: string };
+    apiPagos: { name: string; status: 'ONLINE' | 'OFFLINE'; message: string };
+}

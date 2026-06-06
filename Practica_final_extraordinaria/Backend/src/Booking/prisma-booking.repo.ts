@@ -50,4 +50,16 @@ export class PrismaBookingRepository implements IBookingRepository{
             }
         });
     }
+
+    async findReservasPorCliente(clienteId: string) {
+        return await prisma.reserva.findMany({
+            where: { clienteId },
+            orderBy: { checkIn: 'desc'},
+            include:{
+                apartamento: {
+                    select: { nombre: true, provincia: true, municipio: true }
+                }
+            }
+        });
+    }
 }

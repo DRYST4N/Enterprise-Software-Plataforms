@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { adminAPI } from '../services/api';
 import  type {Apartamento}  from '../types';
 
 
@@ -22,7 +22,7 @@ export default function AdminAlojamientos() {
     try {
       setLoading(true);
       // Apunta a tu ruta global de listar todos los apartamentos del backend
-      const response = await api.get('/admin/apartamentos'); 
+      const response = await adminAPI.get('/admin/apartamentos'); 
       setApartamentos(response.data);
     } catch (err) {
       console.error('Error cargando apartamentos:', err);
@@ -34,8 +34,7 @@ export default function AdminAlojamientos() {
   const handleCambiarEstrellas = async (id: string, estrellas: number) => {
     try {
       // Mandamos la actualización de estrellas directo al ID del inmueble
-      await api.patch('/admin/apartamentos/estrellas', { 
-        apartamentoId: id,
+      await adminAPI.patch(`/admin/apartments/${id}/estrellas`, { 
         estrellas: estrellas
     });
       setApartamentos(prev =>

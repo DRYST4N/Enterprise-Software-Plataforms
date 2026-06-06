@@ -1,10 +1,10 @@
+// src/pages/AgenciaInforme.tsx
 import React, { useState } from 'react';
-import api from '../services/api';
+import { publicAPI } from '../services/api';
 import type { DatosInforme } from '../types';
 
-
 export default function AgenciaInforme() {
-  // Inicializamos el año con el año actual en curso (2026)
+  
   const [anio, setAnio] = useState<string>('2026');
   const [informe, setInforme] = useState<DatosInforme | null>(null);
   const [loading, setLoading] = useState(false);
@@ -23,10 +23,10 @@ export default function AgenciaInforme() {
 
     try {
       setLoading(true);
-      // Consumimos tu endpoint analítico del backend enviando el año por Query Params
-      const response = await api.get(`/apartamento/informe-ventas?anio=${anioNum}`);
       
-      // Mapeamos la respuesta (Asegúrate de que tu backend devuelve estas propiedades)
+      const response = await publicAPI.get(`/apartments/informe-ventas`);
+      
+      // Mapeamos la respuesta del backend
       setInforme({
         anio: anioNum,
         totalIngresos: response.data.totalIngresos || 0,

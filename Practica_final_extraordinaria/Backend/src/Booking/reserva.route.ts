@@ -7,6 +7,7 @@ export const setupBookingRoutes = (controllers: any) => {
     const { booking } = controllers.bookingController;
 
     router.post("/", RequireAuth, checkRole(['CLIENTE']), booking.postResereva);
+    router.get("/mis-reservas", RequireAuth, checkRole(['CLIENTE']), booking.getMisReservas);
 
     return router;
 }
