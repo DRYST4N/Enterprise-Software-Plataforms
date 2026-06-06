@@ -23,7 +23,6 @@ import{
 } from './Admin/index.js';
 
 import { AxiosPaymentService } from './Frameworks/PaymentService.js';
-import { GetAllAparments } from './Apartments/use-cases/get-all-apartments.js';
 
 
 export const init = async () => {
@@ -58,6 +57,7 @@ export const init = async () => {
         getAllAgencies:new AdminUseCase.GetAllAparments(adminRepository),
         getAllApartmentsAdmin: new AdminUseCase.GetAllAparments(adminRepository),
         updateEstrellas: new AdminUseCase.UpdateEstrellasUseCase(adminRepository),
+        getSystemStatus: new AdminUseCase.GetServicesStatusUseCase(),
     }
 
     const appDependencies = {

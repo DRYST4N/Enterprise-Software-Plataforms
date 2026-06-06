@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 
 
 export const AdminActionController = (dependencies: any) => {
-    const { usecase: { verifyAgency, getAllAgencies, getAllApartments, updateEstrellas } } = dependencies;
+    const { usecase: { verifyAgency, getAllAgencies, getAllApartments, updateEstrellas, getServicesStatus } } = dependencies;
 
     return {
         verifyAgency: async (req: Request, res: Response, next: NextFunction) => {
@@ -49,6 +49,15 @@ export const AdminActionController = (dependencies: any) => {
                     apartamento: resultado
                 });
             } catch (error: any) { return res.status(400).json({ error: error.message }); }
+        },
+
+        getSystemStatus: async(req: Request, res: Response, next: NextFunction) => {
+            try{
+                const statusReport = await getServicesStatus.execute();
+                return res.status(200).json(statusReport);
+            }catch(error){
+                next(error);
+            }
         }
 
     }

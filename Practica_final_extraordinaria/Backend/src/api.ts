@@ -20,6 +20,9 @@ const startPublicServer = async () => {
     app.use("/api/apartments", apartmentRouter(dependencies.controller));
     app.use("/api/auth", authRouter(dependencies.controller));
     
+    app.get("/api/health", (req, res) => {
+        return res.status(200).json({ status: "UP", timestamp: new Date() });
+    });
 
     app.listen(process.env.PORT, () => {
         console.log("El servidor de Castilla Rooms esta corriendo perfectamente.");

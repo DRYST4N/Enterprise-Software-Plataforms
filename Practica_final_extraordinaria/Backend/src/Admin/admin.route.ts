@@ -29,5 +29,7 @@ export const setupAdminRoutes = (controller: any) => {
     router.get("/apartments", adminAction.getAllApartments);
     router.patch("/apartments/:apartamentoId/estrellas", adminAction.updateEstrellas);
 
+    router.get("/system/status", adminAction.getSystemStatus);
+
     return router;
 }

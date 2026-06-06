@@ -15,6 +15,10 @@ const startPaymentAPI = async() => {
 
     app.use("/api/reservas", bookingRouter(dependencies.controller));
 
+    app.get("/api/health", (req, res) => {
+        return res.status(200).json({ status: "UP", timestamp: new Date() });
+    });
+
     app.listen(process.env.PAYMENT_PORT, () => {
         console.log("El servidor de reservas y pagos esta corriendo a la perfeccion.")
     });
