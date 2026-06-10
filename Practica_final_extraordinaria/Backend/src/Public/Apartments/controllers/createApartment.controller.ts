@@ -2,13 +2,12 @@ import type { Request, Response, NextFunction } from "express";
 import { CreateApartamentoSchema } from "../apartamentos.dto.js";
 
 export const CreateApartmentController = (dependencies: any) => {
-    const { usecase: { createApartment}} = dependencies;
+    const { usecases: { ApartmentUseCases: { createApartment } } } = dependencies;
 
-    return {
-        createApartment: async( req: Request, res: Response, next: NextFunction) => {
+    return async( req: Request, res: Response, next: NextFunction) => {
             try {
                 const agenciaId = (req as any).user?.agencia.id;
-
+                 //Esta validacion va en el Use case
                 if (!agenciaId) {
                     throw new Error('El usuario no esta autenticado.');
                 }
@@ -28,4 +27,3 @@ export const CreateApartmentController = (dependencies: any) => {
             }
         }
     }
-}

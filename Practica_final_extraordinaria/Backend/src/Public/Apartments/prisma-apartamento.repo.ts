@@ -1,4 +1,4 @@
-import { prisma } from "../Frameworks/prisma.js";
+import { prisma } from "../../Frameworks/prisma.js";
 import type { IApartamentoRepository } from "./apartments.repository.js";
 import type { Apartments } from "./apartment.entity.js";
 

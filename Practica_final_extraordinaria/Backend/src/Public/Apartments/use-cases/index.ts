@@ -6,7 +6,7 @@ import { GetMisApartment } from "./get-mis-apartments.js";
 import { GetOneApartment } from "./get-one-apartment.js";
 import { UpdateApartment } from "./update-apartament.js";
 
-export const ApartmentsUseCases = {
+export default {
     CreateApartment,
     GetAllAparments,
     GetOneApartment,

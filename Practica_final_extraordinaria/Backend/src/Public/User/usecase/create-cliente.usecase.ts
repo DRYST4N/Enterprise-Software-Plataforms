@@ -2,7 +2,7 @@ import type { IAuthRepository } from "../auth.repository.js";
 import { UserEntity } from "../auth.entity.js";
 import bcrypt from "bcrypt";
 import type { CreateClienteInput } from "../auth.type.js";
-import { throwDeprecation } from "node:process";
+
 
 export class CreateCliente {
     constructor(private userRepository: IAuthRepository) {}

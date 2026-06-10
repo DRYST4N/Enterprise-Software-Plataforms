@@ -1,7 +1,6 @@
-import { addUncaughtExceptionCaptureCallback } from "node:process";
 import type { IAuthRepository } from "../auth.repository.js";
 import type { UpdateMisDatosInput } from "../auth.type.js";
-import { use } from "passport";
+
 
 export class UpdateMisDatosUseCase {
     constructor (private authRepository: IAuthRepository ) {}
