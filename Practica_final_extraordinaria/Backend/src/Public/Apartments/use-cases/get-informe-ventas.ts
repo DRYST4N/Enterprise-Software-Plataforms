@@ -4,9 +4,12 @@ export class GetInformeVentas{
     constructor(private apartmentRepository: IApartamentoRepository) {}
 
     async execute(agenciaId: string) {
+        if(!agenciaId){
+            throw new Error('No tiene permisos para realizar esta acción.')
+        }
         const datosRaw = await this.apartmentRepository.getInforme(agenciaId);
         return datosRaw.map((apto: any) => {
-            const ingresosTotales = apto.reservas.reduce((sum: number, res: any) => sum + res.total, 0);
+            const ingresosTotales = apto.reservas.reduce((sum: number, res: any) => sum + res.precioTotal, 0);
             const numeroReservas = apto.reservas.length;
 
             return {
