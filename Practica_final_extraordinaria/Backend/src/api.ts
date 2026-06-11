@@ -4,6 +4,7 @@ import { Server } from "http"; // Importamos el tipo para el servidor HTTP
 import publicRouter  from './Public/routes.js';
 import passport from './config/passport.js';
 import corsMiddleware from "./config/cors.js";
+import adminRouter from './Admin';
 
 
 // Declaramos las variables con sus tipos correctos en TypeScript (pueden ser su tipo o null)
@@ -19,12 +20,9 @@ export default {
         app.use(corsMiddleware);
 
         app.use("/api", publicRouter(dependencies));
-        // y otro de admin
         
+        app.use("/admin", adminRouter(dependencies));
         
-        app.get("/api/health", (req, res) => {
-            return res.status(200).json({ status: "UP", timestamp: new Date() });
-        });
 
         const port = process.env.PORT || 3000;
         

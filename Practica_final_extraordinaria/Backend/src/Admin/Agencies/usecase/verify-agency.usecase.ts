@@ -1,7 +1,7 @@
-import type { IAdminRepository } from "../admin.repository.js";
+import type { IAdminAgenciesRepository } from "../admin.agencies.repository.js";
 
 export class VerifyAgencyUseCase {
-    constructor(private adminRepository: IAdminRepository) {}
+    constructor(private adminRepository: IAdminAgenciesRepository) {}
 
     async execute(agenciaId: string, aprobar: boolean) {
         console.log(`[ADMIN Use Case] Cambiando verificacion de agencia ${agenciaId}`);

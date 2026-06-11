@@ -1,7 +1,7 @@
-import type { IAdminRepository } from "../admin.repository.js";
+import type { IAdminApartmentsRepository } from "../admin.apartment.respository.js";
 
 export class UpdateEstrellasUseCase {
-    constructor(private adminRepository: IAdminRepository) {}
+    constructor(private adminRepository: IAdminApartmentsRepository) {}
 
     async execute(apartmentId: string, estrellas: number) {
         console.log(`[ADMIN Use Case] Actualizando las estrellas al apartamento: ${apartmentId}`);

@@ -1,7 +1,7 @@
-import type { IAdminRepository } from "../admin.repository.js";
+import type { IAdminAgenciesRepository } from "../admin.agencies.repository.js";
 
 export class GetAllAgencies {
-    constructor(private adminRepository: IAdminRepository) {}
+    constructor(private adminRepository: IAdminAgenciesRepository) {}
 
     async execute() {
         console.log("[ADMIN Use Case] Solicitando la lista global de agencias.");

@@ -1,7 +1,7 @@
 import { Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
 import type { StrategyOptions } from 'passport-jwt';
 import passport from 'passport';
-import {prisma} from './db.js';
+import {prisma} from '../Frameworks/prisma.js';
 
 const opts: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

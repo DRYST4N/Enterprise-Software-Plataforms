@@ -8,12 +8,7 @@
     "db:generate": "prisma generate --schema=./src/prisma/schema.prisma",
     "db:studio": "prisma studio --config=./src/prisma/schema.prisma",
     "start:public": "node dist/api.js",
-    "start:admin": "node dist/Admin-server.js",
-    "start:payment": "node dist/Payments-api.js",
-    "dev:public": "tsx watch index",
-    "dev:admin": "tsx watch Admin-server.js",
-    "dev:payment": "tsc watch Payments-api.js",
-    "dev": "concurrently \"npm run dev:public\" \"npm run dev:admin\" \"npm run dev:payment\"",
+    "dev": "tsx watch index",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
