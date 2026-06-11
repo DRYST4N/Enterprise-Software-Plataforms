@@ -1,4 +1,4 @@
-import type { IBookingRepository } from "../../../Booking/booking.repository.js";
+import type { IBookingRepository } from "../../Booking/booking.repository.js";
 import type{ IApartamentoRepository } from "../apartments.repository.js";
 
 export class DeleteApartment {
