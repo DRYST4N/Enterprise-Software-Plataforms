@@ -20,7 +20,7 @@ export default {
 
         app.use("/api", publicRouter(dependencies));
         // y otro de admin
-        //app.use("/api/auth", authRouter(dependencies.controller));
+        
         
         app.get("/api/health", (req, res) => {
             return res.status(200).json({ status: "UP", timestamp: new Date() });

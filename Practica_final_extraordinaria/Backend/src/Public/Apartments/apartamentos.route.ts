@@ -8,11 +8,12 @@ export const setupApartmentRoutes = (dependencies: any) => {
     const router = Router();
 
     
-    const { createApartment, deleteApartment } = controllers(dependencies);
+    const { createApartment, deleteApartment, getAllApartments } = controllers(dependencies);
 
     //rutas privadas
     router.post('/', RequireAuth, checkRole([Role.AGENCIA,]), createApartment);
     router.delete('/:id', RequireAuth, checkRole([Role.AGENCIA]), deleteApartment);
+    router.get('/', getAllApartments);
     /*
     router.put('/:id', RequireAuth, checkRole([Role.AGENCIA]), apartment.updateApartment);
     router.get('/mis-apartment', RequireAuth, checkRole([Role.AGENCIA]), apartment.getMisApartments);
@@ -20,7 +21,7 @@ export const setupApartmentRoutes = (dependencies: any) => {
     router.get('/informe-venta', RequireAuth, checkRole([Role.AGENCIA]), apartment.getInformeVentas);
 
     //Rutas publicas
-    router.get('/', apartment.getAllApartments);
+    
     router.get('/:id', apartment.getOneApartment);
 */
 
