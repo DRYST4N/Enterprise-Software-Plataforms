@@ -7,10 +7,7 @@ export const CreateApartmentController = (dependencies: any) => {
     return async( req: Request, res: Response, next: NextFunction) => {
             try {
                 const agenciaId = (req as any).user?.agencia.id;
-                 //Esta validacion va en el Use case
-                if (!agenciaId) {
-                    throw new Error('El usuario no esta autenticado.');
-                }
+                
 
                 const validation = CreateApartamentoSchema.safeParse(req.body);
 

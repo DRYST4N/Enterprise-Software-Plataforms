@@ -8,6 +8,10 @@ export class CreateApartment {
     async execute(data: IApartmentRequest): Promise<Apartments> {
         console.log(`🎯 [Use Case] Procesando la creación del apartamento: ${data.nombre}`);
 
+        if(!data.agenciaId){
+            throw new Error('El usuario no está autenticado.');
+        }
+
         //Validamos la data que entra:
         if (data.precioNoche <= 0){
             throw new Error(' EL precio por noche dee ser un importe mayor que cero.');
