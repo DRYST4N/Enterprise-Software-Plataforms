@@ -3,10 +3,11 @@ import { DeleteApartmentController } from "./deleteApartment.controller.js";
 import { GetAllAparmentsController } from "./getAllApartments.controller.js";
 import { GetInformeVentasController } from "./getInformeVentas.controller.js"; 
 import { GetMisApartmentController } from "./getMisApartment.controller.js";
+import { GetOneApartmentController } from "./getOneApartment.controller.js";
 /*
 
 
-import { GetOneApartmentController } from "./getOneApartment.controller.js";
+
 import { UpdateApartmentController } from "./updateApartment.controller.js";
 
 
@@ -19,8 +20,9 @@ export default (dependencies: any) => {
         getAllApartments: GetAllAparmentsController(dependencies),
         getInformeVentas: GetInformeVentasController(dependencies),
         getMisApartments: GetMisApartmentController(dependencies),
-        /*
         getOneApartment: GetOneApartmentController(dependencies),
+        /*
+        
         updateApartment: UpdateApartmentController(dependencies),
         
         

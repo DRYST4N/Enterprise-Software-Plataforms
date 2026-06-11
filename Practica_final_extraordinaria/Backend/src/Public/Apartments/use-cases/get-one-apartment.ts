@@ -1,11 +1,15 @@
-import type{ Apartamento } from "@prisma/client";
+
 import type { IApartamentoRepository } from "../apartments.repository.js";
 
 export class GetOneApartment {
     constructor(private apartmentRepository: IApartamentoRepository) {}
 
-    async execute( id: string): Promise<Apartamento> {
+    async execute( id: string){
         console.log("[Use Case] Solicitando el apartamento especifico.");
+
+        if(!id) {
+            throw new Error('El identificador del apartamento es obligatorio. ');
+        }
 
         const apartamento = await this.apartmentRepository.findById(id);
 
