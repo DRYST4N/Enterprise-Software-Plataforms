@@ -1,4 +1,4 @@
-import {prisma} from "../config/db.js";
+import {prisma} from "../../Frameworks/prisma.js";
 import type { IAuthRepository, UserWithProfile } from "./auth.repository.js";
 import { UserEntity } from "./auth.entity.js";
 import type { User } from "@prisma/client";

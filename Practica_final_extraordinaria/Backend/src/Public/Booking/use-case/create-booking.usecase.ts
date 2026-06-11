@@ -1,6 +1,6 @@
 import type { IBookingRepository, IPaymentService } from "../booking.repository.js";
 import type { CreateReservaInput } from "../reservas.dto.js";
-import { decrypt } from '../../Frameworks/crypto.js';
+import { decrypt } from '../../../Frameworks/crypto.js';
 
 
 export class CreateBookingUseCase {
@@ -11,6 +11,10 @@ export class CreateBookingUseCase {
 
     async execute(data: CreateReservaInput, clienteId: string){
         console.log(`[Use Case] Procesando la reserva para el apto: ${data.apartamentoId}`);
+
+        if(!clienteId){
+            throw new Error('Acceso denegado: Se necesita un perfil de Cliente para poder reservar.');
+        }
 
         const parts = data.expiryDate.split('/');
         const mesCaducidad = parseInt(parts[0] ||'', 10);

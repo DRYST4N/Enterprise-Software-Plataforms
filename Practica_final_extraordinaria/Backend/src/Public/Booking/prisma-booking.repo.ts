@@ -1,4 +1,4 @@
-import  { prisma } from '../Frameworks/prisma.js'
+import  { prisma } from '../../Frameworks/prisma.js';
 import type { IBookingRepository } from "./booking.repository.js";
 
 
