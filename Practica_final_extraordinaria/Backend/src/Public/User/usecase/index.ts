@@ -4,7 +4,7 @@ import { GetMisDatosUseCase } from "./get-mis-datos.usecase.js";
 import { LoginUseCase } from "./login.usecase.js";
 import { UpdateMisDatosUseCase } from "./update-mis-datos.usecase.js";
 
-export const AuthUsesCases = {
+export default {
     CreateAgencia,
     CreateCliente,
     LoginUseCase,

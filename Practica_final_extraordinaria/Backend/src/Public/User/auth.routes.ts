@@ -1,16 +1,17 @@
 import { Router } from 'express';
-import { RequireAuth } from '../middlewares/auth.middlewares.js';
+import { RequireAuth } from '../../middlewares/auth.middlewares.js';
+import controllers from './controller/index.js';
 
-export const setupAuthRoutes = (controllers: any) => {
+export const setupAuthRoutes = (dependencies: any) => {
     const router = Router();
 
-    const auth = controllers.authController;
+    const { createCliente, createAgencia, getMisDatos, updateMisDatos, login,} = controllers(dependencies);
 
-    router.post("/register/client", auth.createCliente);
-    router.post("/register/agencia", auth.createAgencia);
-    router.post("/login", auth.login);
-    router.get("/me", RequireAuth, auth.getMisDatos);
-    router.put("/me", RequireAuth, auth.updateMisDatos);
+    router.post("/register/client", createCliente);
+    router.post("/register/agencia", createAgencia);
+    router.post("/login", login);
+    router.get("/me", RequireAuth, getMisDatos);
+    router.put("/me", RequireAuth, updateMisDatos);
 
     return router;
 }

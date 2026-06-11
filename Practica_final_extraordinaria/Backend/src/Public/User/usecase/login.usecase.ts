@@ -11,6 +11,10 @@ export class LoginUseCase {
     async execute(input: LoginInput){
         console.log("[Use Case] Procesando intento de login. ");
 
+        if(!input.email || !input.passwordPlano){
+            throw new Error('El email y la contraseña son datos obligatorios.');
+        }
+
         const user = await this.authRepository.findByEmail(input.email);
         if(!user) {
             throw new Error("Las credenciales introducidas no son correctas.");

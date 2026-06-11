@@ -7,6 +7,9 @@ export class UpdateMisDatosUseCase {
 
     async execute(input: UpdateMisDatosInput) {
         console.log("[use Case] Validando actualizacion de perfil para el usuario.");
+        if(!input.userId || !input.role ){
+                throw new Error('No autorizado. Sesión invalida.');
+            }
 
         if(input.role === 'CLIENTE' && input.nombreApellidos && input.nombreApellidos.trim().length < 4){
             throw new Error('El nombre y apellidos deben tener al menos 4 caracteres.');
