@@ -1,13 +1,15 @@
-import type { Apartamento } from "@prisma/client";
 import type { IApartamentoRepository } from "../apartments.repository.js";
-import { Apartments } from "../apartment.entity.js";
 import type { UpdateApartmentInput } from "../apartment.types.js";
 
 export class UpdateApartment {
     constructor (private apartmentRepository: IApartamentoRepository) {}
 
-    async execute(input: UpdateApartmentInput): Promise<Apartamento> {
+    async execute(input: UpdateApartmentInput){
         console.log("[Use Case] Validando la actualizacion del apartamento.");
+
+        if(!input.agenciaId){
+            throw new Error('No autorizado, Inicie sesión como agencia.');
+        }
 
         const apartamentoExiste = await this.apartmentRepository.findById(input.id);
         if(!apartamentoExiste) {
@@ -24,6 +26,6 @@ export class UpdateApartment {
             provincia: input.provincia,
             precioNoche: input.precioNoche,
             descripcion: input.descripcion
-        })
+        });
     }
 }

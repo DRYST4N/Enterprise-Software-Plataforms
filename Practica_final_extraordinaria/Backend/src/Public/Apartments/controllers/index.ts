@@ -4,14 +4,7 @@ import { GetAllAparmentsController } from "./getAllApartments.controller.js";
 import { GetInformeVentasController } from "./getInformeVentas.controller.js"; 
 import { GetMisApartmentController } from "./getMisApartment.controller.js";
 import { GetOneApartmentController } from "./getOneApartment.controller.js";
-/*
-
-
-
 import { UpdateApartmentController } from "./updateApartment.controller.js";
-
-
-*/
 
 export default (dependencies: any) => {
     return{
@@ -21,11 +14,6 @@ export default (dependencies: any) => {
         getInformeVentas: GetInformeVentasController(dependencies),
         getMisApartments: GetMisApartmentController(dependencies),
         getOneApartment: GetOneApartmentController(dependencies),
-        /*
-        
         updateApartment: UpdateApartmentController(dependencies),
-        
-        
-        */
     }
 }

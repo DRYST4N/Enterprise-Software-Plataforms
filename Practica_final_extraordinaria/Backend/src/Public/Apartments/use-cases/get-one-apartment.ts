@@ -1,4 +1,3 @@
-
 import type { IApartamentoRepository } from "../apartments.repository.js";
 
 export class GetOneApartment {
