@@ -9,6 +9,7 @@ import passport from './config/passport.js';
 import corsMiddleware from "./config/cors.js";
 import helmet from "helmet";
 import { errorHandlerMiddleware } from "./middlewares/Errors/error.middleware.js";
+import compression from 'compression';
 
 
 
@@ -25,6 +26,7 @@ export default {
 
         app.use(express.json());
         app.use(passport.initialize());
+        app.use(compression());
         
 
         app.use("/api", publicRouter(dependencies));
