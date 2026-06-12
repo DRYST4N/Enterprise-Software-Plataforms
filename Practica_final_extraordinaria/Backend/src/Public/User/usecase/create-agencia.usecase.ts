@@ -2,6 +2,7 @@ import type { IAuthRepository } from "../auth.repository.js";
 import bcrypt from 'bcrypt';
 import type { CreateAgenciaInput } from "../auth.type.js";
 import { error } from "node:console";
+import { BadRequestError, ConflictError } from "../../../middlewares/Errors/CustomErrors.js";
 
 export class CreateAgencia {
     constructor (private userRepository: IAuthRepository){}
@@ -10,19 +11,19 @@ export class CreateAgencia {
         console.log(" [Use Case] Procesando registro de agencia.");
 
         if(!input.email.includes('@')){
-            throw new Error('El formato del correo electrónico no es válido.');
+            throw new BadRequestError('El formato del correo electrónico no es válido.');
         }
         if(!input.cif || input.cif.trim().length < 9){
-            throw new Error('El CIF es obligatorio y debe tener un formato válido para operar como agencia.');
+            throw new BadRequestError('El CIF es obligatorio y debe tener un formato válido para operar como agencia.');
         }
 
         if(!input.razonSocial){
-            throw new Error('La razón social es obligatoria.');
+            throw new BadRequestError('La razón social es obligatoria.');
         }
         
         const usuarioExistente = await this.userRepository.findByEmail(input.email);
         if(usuarioExistente){
-            throw new Error('El correo electrónico ya se encuentra registrado.');
+            throw new ConflictError('El correo electrónico ya se encuentra registrado.');
         }
 
         const salt = await bcrypt.genSalt(10);

@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { RegistrarAgenciaSchema } from "../authDto.js";
+import { BadRequestError } from "../../../middlewares/Errors/CustomErrors.js";
 
 export const CreateAgenciaController = (dependencies: any) => {
     const { usecases: { AuthUsecases: { createAgencia } } } = dependencies;
@@ -11,9 +12,7 @@ export const CreateAgenciaController = (dependencies: any) => {
             const validation = RegistrarAgenciaSchema.safeParse(req.body);
 
             if(!validation.success) {
-                return res.status(400).json({
-                    error: validation.error.issues.map(err => err.message)
-                });
+                throw new BadRequestError('Error al validar los datos.');
             }
 
             const nuevaAgencia = await createAgencia.execute({

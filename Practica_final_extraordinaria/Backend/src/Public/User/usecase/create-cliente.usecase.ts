@@ -2,6 +2,7 @@ import type { IAuthRepository } from "../auth.repository.js";
 import { UserEntity } from "../auth.entity.js";
 import bcrypt from "bcrypt";
 import type { CreateClienteInput } from "../auth.type.js";
+import { BadRequestError, ConflictError } from "../../../middlewares/Errors/CustomErrors.js";
 
 
 export class CreateCliente {
@@ -12,17 +13,17 @@ export class CreateCliente {
 
         const usuarioExistente = await this.userRepository.findByEmail(input.email);
         if(usuarioExistente){
-            throw new Error('El correo electrónico ya se encuantra registrado.');
+            throw new ConflictError('El correo electrónico ya se encuantra registrado.');
         }
 
         if (!input.email.includes('@')){
-            throw new Error(' El formato del correo electrónico no es válido');
+            throw new BadRequestError(' El formato del correo electrónico no es válido');
         }
         if (!input.nombreApellidos || input.nombreApellidos.trim().length < 4){
-            throw new Error('Es obligatorio aportar nombre y apellidos válidos.');
+            throw new BadRequestError('Es obligatorio aportar nombre y apellidos válidos.');
         }
         if(!input.dni){
-            throw new Error('El DNI es un campo obligatorio para los clientes.');
+            throw new BadRequestError('El DNI es un campo obligatorio para los clientes.');
         }
         const fechaNac = new Date(input.fechaNacimiento);
         const hoy = new Date();
@@ -33,13 +34,13 @@ export class CreateCliente {
             edad--;
         }
         if(isNaN(fechaNac.getTime())){
-            throw new Error('La fecha de nacimiento instroducida no es válida');
+            throw new BadRequestError('La fecha de nacimiento instroducida no es válida');
         }
         if(edad < 18){
-            throw new Error('El cliente debe ser mayor de edad (mínimo 18 años) para registrarse.');
+            throw new BadRequestError('El cliente debe ser mayor de edad (mínimo 18 años) para registrarse.');
         }
         if(edad > 100){
-            throw new Error('La fecha de nacimiento no es coherente (máximo 100 años).');
+            throw new BadRequestError('La fecha de nacimiento no es coherente (máximo 100 años).');
         }
         
 

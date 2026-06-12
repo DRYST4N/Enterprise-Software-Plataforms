@@ -23,3 +23,15 @@ export class PaymentRequiredError extends AppError {
         super(message, 402);
     }
 }
+
+export class ConflictError extends AppError {
+    constructor(message: string = 'El recurso que intentas crear ya existe.') {
+        super(message, 409);
+    }
+}
+
+export class ForbiddenError extends AppError {
+    constructor(message: string = 'Acceso prohibido.') {
+        super(message, 403);
+    }
+}
