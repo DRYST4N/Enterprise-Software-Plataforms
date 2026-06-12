@@ -14,6 +14,6 @@ export const UpdateEstrellasController = (dependencies: any) => {
                 message: "Estrellas asignadas con éxito.",
                 apartamento: resultado
             });
-        } catch (error: any) { return res.status(400).json({ error: error.message }); }
+        } catch (error: any) { next(error) }
     }
 }
