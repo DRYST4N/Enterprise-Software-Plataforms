@@ -1,10 +1,15 @@
 import express from "express";
 import type { Express } from "express";
-import { Server } from "http"; // Importamos el tipo para el servidor HTTP
+import { Server } from "http";
+
 import publicRouter  from './Public/routes.js';
+import adminRouter from './Admin';
+
 import passport from './config/passport.js';
 import corsMiddleware from "./config/cors.js";
-import adminRouter from './Admin';
+import helmet from "helmet";
+import { errorHandlerMiddleware } from "./middlewares/Errors/error.middleware.js";
+
 
 
 // Declaramos las variables con sus tipos correctos en TypeScript (pueden ser su tipo o null)
@@ -13,15 +18,21 @@ let server: Server | null = null;
 
 export default {
     start: async (dependencies: any): Promise<void> => {
+
         app = express();
+        app.use(helmet());
+        app.use(corsMiddleware);
 
         app.use(express.json());
         app.use(passport.initialize());
-        app.use(corsMiddleware);
+        
 
         app.use("/api", publicRouter(dependencies));
         
         app.use("/admin", adminRouter(dependencies));
+
+
+        app.use(errorHandlerMiddleware);
         
 
         const port = process.env.PORT || 3000;

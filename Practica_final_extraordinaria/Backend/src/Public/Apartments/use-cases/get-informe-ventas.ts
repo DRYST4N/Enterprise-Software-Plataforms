@@ -1,3 +1,4 @@
+import { UnauthorizedError } from "../../../middlewares/Errors/CustomErrors.js";
 import type { IApartamentoRepository } from "../apartments.repository.js";
 
 export class GetInformeVentas{
@@ -5,7 +6,7 @@ export class GetInformeVentas{
 
     async execute(agenciaId: string) {
         if(!agenciaId){
-            throw new Error('No tiene permisos para realizar esta acción.')
+            throw new UnauthorizedError('No tiene permisos para realizar esta acción.')
         }
         const datosRaw = await this.apartmentRepository.getInforme(agenciaId);
         return datosRaw.map((apto: any) => {

@@ -1,6 +1,7 @@
 import type { IApartamentoRepository } from "../apartments.repository.js";
 import type { IApartmentRequest } from "../apartment.types.js";
 import type { Apartments } from "../apartment.entity.js";
+import { BadRequestError, UnauthorizedError } from "../../../middlewares/Errors/CustomErrors.js";
 
 export class CreateApartment {
     constructor(private apartmentRepository: IApartamentoRepository) {}
@@ -9,20 +10,20 @@ export class CreateApartment {
         console.log(`🎯 [Use Case] Procesando la creación del apartamento: ${data.nombre}`);
 
         if(!data.agenciaId){
-            throw new Error('El usuario no está autenticado.');
+            throw new UnauthorizedError('El usuario no está autenticado.');
         }
 
         //Validamos la data que entra:
         if (data.precioNoche <= 0){
-            throw new Error(' EL precio por noche dee ser un importe mayor que cero.');
+            throw new BadRequestError('El precio debe ser mayor que cero.');
         }
         const provinciasValidas = ['Ávila', 'Burgos', 'León', 'Palencia', 'Salamanca', 'Segovia', 'Soria', 'Valladolid', 'Zamora'];
         if(!provinciasValidas.includes(data.provincia)){
-            throw new Error(`la provincia ${data.provincia} no pertenece a la comunidad de Castilla y León.`);
+            throw new BadRequestError(`la provincia ${data.provincia} no pertenece a la comunidad de Castilla y León.`);
         }
 
         if (!data.nombre || data.nombre.trim().length < 3){
-            throw new Error(' El nombre comercial del apartamento debe tener al menos 3 caracteres.');
+            throw new BadRequestError(' El nombre comercial del apartamento debe tener al menos 3 caracteres.');
         }
 
         return await this.apartmentRepository.create({

@@ -1,5 +1,6 @@
 import type { IApartamentoRepository } from "../apartments.repository.js";
 import type { UpdateApartmentInput } from "../apartment.types.js";
+import { NotFoundError, UnauthorizedError } from "../../../middlewares/Errors/CustomErrors.js";
 
 export class UpdateApartment {
     constructor (private apartmentRepository: IApartamentoRepository) {}
@@ -8,16 +9,16 @@ export class UpdateApartment {
         console.log("[Use Case] Validando la actualizacion del apartamento.");
 
         if(!input.agenciaId){
-            throw new Error('No autorizado, Inicie sesión como agencia.');
+            throw new UnauthorizedError('No autorizado, Inicie sesión como agencia.');
         }
 
         const apartamentoExiste = await this.apartmentRepository.findById(input.id);
         if(!apartamentoExiste) {
-            throw new Error('El alojamiento que intentas modificar no existe.');
+            throw new NotFoundError('El alojamiento que intentas modificar no existe.');
         }
 
         if(apartamentoExiste.agenciaId !== input.agenciaId){
-            throw new Error('No tienes permisos para modificar este alojamiento.');
+            throw new UnauthorizedError('No tienes permisos para modificar este alojamiento.');
         }
 
         return await this.apartmentRepository.update(input.id, {

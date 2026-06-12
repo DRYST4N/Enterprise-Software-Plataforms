@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { CreateApartamentoSchema } from "../apartamentos.dto.js";
+import { BadRequestError } from "../../../middlewares/Errors/CustomErrors.js";
 
 export const UpdateApartmentController = (dependencies: any) => {
     const { usecases: { ApartmentUseCases: { updateApartment } } } = dependencies;
@@ -13,7 +14,7 @@ export const UpdateApartmentController = (dependencies: any) => {
 
             if(!validation.success){
                 console.log(validation.error.issues.map(err => err.message));
-                throw new Error('Los datos no son validos.')
+                throw new BadRequestError('Los datos no son validos.')
             }
 
             const apartamentoModificado = await updateApartment.execute({

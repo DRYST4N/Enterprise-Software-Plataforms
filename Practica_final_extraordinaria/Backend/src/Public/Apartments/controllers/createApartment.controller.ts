@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { CreateApartamentoSchema } from "../apartamentos.dto.js";
+import { BadRequestError } from "../../../middlewares/Errors/CustomErrors.js";
 
 export const CreateApartmentController = (dependencies: any) => {
     const { usecases: { ApartmentUseCases: { createApartment } } } = dependencies;
@@ -12,7 +13,7 @@ export const CreateApartmentController = (dependencies: any) => {
                 const validation = CreateApartamentoSchema.safeParse(req.body);
 
                 if(!validation.success){
-                    throw new Error('Los datos no son correctos.')
+                    throw new BadRequestError('Los datos no son correctos.')
                 }
                 const apartamentoCreado = await createApartment.execute({ ...validation.data, agenciaId});
                 return res.status(201).json({
