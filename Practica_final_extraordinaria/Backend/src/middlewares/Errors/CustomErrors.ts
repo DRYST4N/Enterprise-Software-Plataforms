@@ -17,3 +17,9 @@ export class UnauthorizedError extends AppError{
         super(message, 401);
     }
 }
+
+export class PaymentRequiredError extends AppError {
+    constructor(message: string = 'El pago no pudo ser procesado') {
+        super(message, 402);
+    }
+}

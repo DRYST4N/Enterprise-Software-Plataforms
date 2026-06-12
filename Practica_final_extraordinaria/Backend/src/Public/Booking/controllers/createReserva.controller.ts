@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { CreateReservaSchema } from "../reservas.dto.js";
+import { BadRequestError } from "../../../middlewares/Errors/CustomErrors.js";
 
 export const CreateReservaController = (dependencies: any) => {
     const { usecases: { BookingUseCases: { createReserva } } } = dependencies;
@@ -8,8 +9,7 @@ export const CreateReservaController = (dependencies: any) => {
         const validation = CreateReservaSchema.safeParse(req.body);
 
         if(!validation.success) {
-            const errores = validation.error.issues.map(err => err.message);
-            return res.status(400).json({ errors: errores});
+            throw new BadRequestError('Error en la validacion de los datos.');            
         }
 
         try{

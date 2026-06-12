@@ -1,6 +1,7 @@
 import type { IBookingRepository, IPaymentService } from "../booking.repository.js";
 import type { CreateReservaInput } from "../reservas.dto.js";
 import { decrypt } from '../../../Frameworks/crypto.js';
+import { BadRequestError, NotFoundError, PaymentRequiredError, UnauthorizedError } from "../../../middlewares/Errors/CustomErrors.js";
 
 
 export class CreateBookingUseCase {
@@ -13,7 +14,7 @@ export class CreateBookingUseCase {
         console.log(`[Use Case] Procesando la reserva para el apto: ${data.apartamentoId}`);
 
         if(!clienteId){
-            throw new Error('Acceso denegado: Se necesita un perfil de Cliente para poder reservar.');
+            throw new UnauthorizedError('Acceso denegado: Se necesita un perfil de Cliente para poder reservar.');
         }
 
         const parts = data.expiryDate.split('/');
@@ -25,21 +26,21 @@ export class CreateBookingUseCase {
         const anoActual = ahora.getFullYear();
 
         if(isNaN(mesCaducidad) || isNaN(anoCaducidad)){
-            throw new Error(' El formato de la fecha de caducidad no es valida.');
+            throw new BadRequestError(' El formato de la fecha de caducidad no es valida.');
         }
 
         if(anoCaducidad < anoActual || (anoCaducidad === anoActual && mesCaducidad < mesActual)){
-            throw new Error('Operación rechazada: La tarjeta de crédito proporcionada está caducada.');
+            throw new BadRequestError('Operación rechazada: La tarjeta de crédito proporcionada está caducada.');
         }
 
         const apartamento = await this.bookingRepository.findApartamentoActivo(data.apartamentoId);
         if(!apartamento){
-            throw new Error('El apartamento solicitado no existe o no está activo.');
+            throw new NotFoundError('El apartamento solicitado no existe o no está activo.');
         }
 
         const hayConflicto = await this.bookingRepository.comprobarConflictoFechas(data.apartamentoId, data.checkIn, data.checkOut);
         if(hayConflicto){
-            throw new Error('El apartamento no está disponible en las fechas actuales seleccionadas.');
+            throw new BadRequestError('El apartamento no está disponible en las fechas actuales seleccionadas.');
         }
 
         const diferenciaTiempo = data.checkOut.getTime() - data.checkIn.getTime();
@@ -58,7 +59,7 @@ export class CreateBookingUseCase {
         });
 
         if(paymentResponse.status === 'declined') {
-            throw new Error('La transacción ha sido rechazada por fondos insuficienteso tarjeta inválida');
+            throw new PaymentRequiredError('La transacción ha sido rechazada por fondos insuficienteso tarjeta inválida');
         }
 
         return await this.bookingRepository.createReserva({
